@@ -1,0 +1,9 @@
+export { default as SignInBg } from "./SignInBg.png";
+export { default as SignInBg2 } from "./bgpic1.png";
+export { default as mindpathIcon } from "./mindpath-icon.png";
+export { default as signupPic } from "./signup-pic.png";
+export { default as logoColored } from "./logoColored.png";
+export { default as menuItemlogo } from "./drawerpng.png";
+export { default as ebotifylogo } from "./ebotifylogo.png";
+export { default as cardlogo } from "./cardlogo.png";
+export { default as userpic } from "./userpic.png";

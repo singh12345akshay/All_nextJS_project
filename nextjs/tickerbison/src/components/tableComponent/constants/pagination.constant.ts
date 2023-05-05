@@ -1,0 +1,1 @@
+export const ROWS_per_page= [10,25,50];
