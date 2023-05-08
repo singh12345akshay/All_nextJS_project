@@ -1,6 +1,7 @@
 
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Paper, styled, Typography } from '@mui/material';
 import Image from "next/image";
+import Link from "next/link";
 import React from 'react'
 import menuData from '../../data/menu.json'
 
@@ -20,6 +21,7 @@ export default function MainMenu() {
         {item.map((item) => {
           return (
             <Grid item key={item.title} xs={12} sm={6} md={6} lg={4}>
+              <Link href={item.page}>
               <Card
                 style={{
                   backgroundColor: "rgb(31, 41, 55)",
@@ -50,11 +52,12 @@ export default function MainMenu() {
                   </Box>
                 </CardActionArea>
               </Card>
+              </Link>
             </Grid>
           );
         })}
       </Grid>
-      <Typography variant="h6" sx={{margin:2,color: "rgb(209, 213, 219)",letterSpacing:1.4}}>{description.value}</Typography>
+      <Typography variant="h6" sx={{margin:2,paddingTop:3,fontWeight:700 ,color: "rgb(209, 213, 219)",letterSpacing:1.4}}>{description.value}</Typography>
     </div>
   );
 }

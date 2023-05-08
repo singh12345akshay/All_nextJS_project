@@ -88,7 +88,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     marginLeft: 0,
   }),
   backgroundColor:'rgb(11, 15, 25)',
-  height:'auto'
+  minHeight: `calc(100vh - ${theme.spacing(0)})`, height: 'auto'
 }));
 interface SideBarComponentProps {
   children:React.ReactNode;
@@ -141,8 +141,8 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
     setDialogOpen(false);
   };
   const items = [
-    { text: "Starter", url: "/starter" },
-    { text: "Main Course", url: "/main-course" },
+    { text: "Starter", url: "/starter/starter" },
+    { text: "Main Course", url: "/mainCourse/mainCourse" },
     { text: "Dessert", url: "/dessert/dessert" },
   ];
   return (
@@ -177,14 +177,13 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
             />
           </Search>
           <Button variant="outlined" onClick={handleClickOpen}>
-            Subscribe
+            My Order
           </Button>
           <Dialog open={dialogOpen} onClose={handleClose}>
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle>My Order</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To subscribe to this website, please enter your email address
-                here. We will send updates occasionally.
+                Here is your Item List
               </DialogContentText>
               <TextField
                 autoFocus

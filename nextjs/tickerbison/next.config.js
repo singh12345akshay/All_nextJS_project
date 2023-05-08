@@ -4,11 +4,15 @@ const nextConfig = {
   // basePath:'/src',
   redirects: async () => [
     {
-      source: '/',
-      destination: '/menu/menu',
+      source: "/",
+      destination: "/menu/menu",
       // basePath:false,
       permanent: true,
-    },]
+    },
+  ],
+  images: {
+    domains: ["www.spiceupthecurry.com"],
+  },
 };
 
 module.exports = nextConfig

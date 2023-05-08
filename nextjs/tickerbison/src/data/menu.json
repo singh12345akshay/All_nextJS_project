@@ -2,15 +2,18 @@
   "item": [
     { 
     "title": "Starter", 
-    "src":"/images/starter.jpg"
+    "src":"/images/starter.jpg",
+    "page":"/starter/starter"
     },
     {
     "title": "Main Course",
-    "src": "/images/maincourse.jpg" 
+    "src": "/images/maincourse.jpg",
+    "page":"/mainCourse/mainCourse"
     },
     { 
     "title": "Dessert", 
-    "src": "/images/desert.jpg" 
+    "src": "/images/desert.jpg" ,
+    "page":"/dessert/dessert"
     }
   ],
   "description":

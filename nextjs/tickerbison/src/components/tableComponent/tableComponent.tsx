@@ -18,6 +18,8 @@ import '@fontsource/roboto/700.css';
 import { Checkbox, styled, TableHead } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from '@/store/store';
+import Image from "next/image";
+import Counter from '../counter/counter';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -31,7 +33,6 @@ interface TablePaginationActionsProps {
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "rgb(31, 41, 55)",
-    color: "rgb(209, 213, 219)",
     fontSize: 16,
     fontWeigth: 700,
     letterSpacing: 0.5,
@@ -39,8 +40,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     backgroundColor: "rgb(17, 24, 39)",
-    color: "rgb(237, 242, 247)",
   },
+  color: "rgb(209, 213, 219)",
   borderBottom: "1px solid rgb(45, 55, 72)",
 }));
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -105,34 +106,8 @@ function TablePaginationActions(props: TablePaginationActionsProps): JSX.Element
   );
 }
 
-function createData(
-  Item: string,
-  Price: number,
-  Order: number
-) {
-  return { Item, Price, Order };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-];
-
-export default function TableComponent() {
+export default function TableComponent(props) {
+  const {item}=props;
   const isSidebarOpen = useSelector((state:AppState) => state.isSidebarOpen);
    const tableWidth = isSidebarOpen ? "240px" : "0px";
   const [page, setPage] = React.useState(0);
@@ -140,7 +115,7 @@ export default function TableComponent() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - item.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -162,38 +137,47 @@ export default function TableComponent() {
         <TableHead>
           <TableRow>
             <StyledTableCell></StyledTableCell>
-            <StyledTableCell>Item</StyledTableCell>
-            <StyledTableCell align="right">Price</StyledTableCell>
-            <StyledTableCell align="right">Order&nbsp;(g)</StyledTableCell>
+            <StyledTableCell>item</StyledTableCell>
+            <StyledTableCell >Price</StyledTableCell>
+            <StyledTableCell >Order</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.Item}>
+            ? item.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
+            : item
+          ).map((item) => (
+            <TableRow key={item.title}>
               <StyledTableCell style={{ width: 90 }}>
                 <Checkbox
-                  // checked={checked}
-                  // onChange={handleChange}
                   sx={{
                     color: "rgb(237, 242, 247)",
                     "&.Mui-checked": {
                       color: "rgb(237, 242, 247)",
-                    },
+                    }
                   }}
                   inputProps={{ "aria-label": "controlled" }}
                 />
               </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {row.Item}
+              <StyledTableCell style={{display:'flex',alignItems: 'center'}} >
+                <Box style={{ width:'100px',height:'90px',border: "2px solid white" , marginRight:'15px', position:'relative',borderRadius:'8px'}}>
+                  <Image
+                    src={item.imagesrc}
+                    fill={true}
+                    alt='food Image'
+                    style={{ borderRadius: '6.5px' }}
+                  ></Image>
+                </Box>
+               {item.title}
               </StyledTableCell>
-              <StyledTableCell style={{ width: 160 }} align="right">
-                {row.Price}
+              <StyledTableCell  >
+                {item.price}
               </StyledTableCell>
-              <StyledTableCell style={{ width: 160 }} align="right">
-                {row.Order}
+              <StyledTableCell  >
+                <Counter/>
               </StyledTableCell>
             </TableRow>
           ))}
@@ -208,7 +192,7 @@ export default function TableComponent() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={5}
-              count={rows.length}
+              count={item.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
