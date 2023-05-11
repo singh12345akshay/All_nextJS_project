@@ -1,4 +1,5 @@
 import * as React from 'react';
+import  { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -16,10 +17,17 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import '@fontsource/roboto/700.css';
 import { Checkbox, styled, TableHead } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { AppState } from '@/store/store';
+import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Counter from '../counter/counter';
+import { addRow, deleteRow, selectTableData } from '@/store/store';
+
+interface ImenuItem{
+    id:number,
+    title: string,
+    imagesrc: string,
+    price: string,
+  }
 
 interface TablePaginationActionsProps {
   count: number;
@@ -43,6 +51,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   color: "rgb(209, 213, 219)",
   borderBottom: "1px solid rgb(45, 55, 72)",
+  minWidth:'120px'
 }));
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   [`&[disabled]`]: {
@@ -66,7 +75,7 @@ function TablePaginationActions(props: TablePaginationActionsProps): JSX.Element
 
   const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, page + 1);
-  };
+  };    
 
   const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
@@ -106,13 +115,31 @@ function TablePaginationActions(props: TablePaginationActionsProps): JSX.Element
   );
 }
 
-export default function TableComponent(props) {
-  const {item}=props;
-  const isSidebarOpen = useSelector((state:AppState) => state.isSidebarOpen);
-   const tableWidth = isSidebarOpen ? "240px" : "0px";
+export default function TableComponent({ item }:ImenuItem[]) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const dispatch = useDispatch();
+  const tableData = useSelector((state: any) => state.data);
+  let desiredObject:any;
+  let itemID:number;
 
+  const handleCheckboxChange = async(item: any) => {
+    desiredObject = tableData.find((obj: any) => obj.id === item.id);
+    if (desiredObject) { 
+      dispatch(deleteRow(item.id));
+    }
+    else
+    {
+      const newRow = {
+        id: item.id,
+        title: item.title,
+        imagesrc: item.imagesrc,
+        price: item.price,
+        count: 1,
+        checked: true,
+      };
+    dispatch(addRow(newRow));}
+    };
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - item.length) : 0;
@@ -130,7 +157,7 @@ export default function TableComponent(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  console.log(tableData)
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="TableComponent">
@@ -139,45 +166,57 @@ export default function TableComponent(props) {
             <StyledTableCell></StyledTableCell>
             <StyledTableCell>item</StyledTableCell>
             <StyledTableCell >Price</StyledTableCell>
-            <StyledTableCell >Order</StyledTableCell>
+            <StyledTableCell ></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? item.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+            ? item.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : item
           ).map((item) => (
-            <TableRow key={item.title}>
+            <TableRow key={item.id}>
               <StyledTableCell style={{ width: 90 }}>
                 <Checkbox
+                  onChange={() => {
+                    handleCheckboxChange(item);
+                  }}
+                  
+                  checked={tableData.find((obj: any) => obj.id === item.id)?tableData.find((obj: any) => obj.id === item.id).checked : false}
                   sx={{
                     color: "rgb(237, 242, 247)",
                     "&.Mui-checked": {
                       color: "rgb(237, 242, 247)",
-                    }
+                    },
                   }}
                   inputProps={{ "aria-label": "controlled" }}
                 />
               </StyledTableCell>
-              <StyledTableCell style={{display:'flex',alignItems: 'center'}} >
-                <Box style={{ width:'100px',height:'90px',border: "2px solid white" , marginRight:'15px', position:'relative',borderRadius:'8px'}}>
+              <StyledTableCell
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Box
+                  style={{
+                    width: "100px",
+                    height: "90px",
+                    border: "2px solid white",
+                    marginRight: "15px",
+                    position: "relative",
+                    borderRadius: "8px",
+                  }}
+                >
                   <Image
                     src={item.imagesrc}
                     fill={true}
-                    alt='food Image'
-                    style={{ borderRadius: '6.5px' }}
+                    sizes="10vw"
+                    alt="food Image"
+                    style={{ borderRadius: "6.5px" }}
                   ></Image>
                 </Box>
-               {item.title}
+                {item.title}
               </StyledTableCell>
-              <StyledTableCell  >
-                {item.price}
-              </StyledTableCell>
-              <StyledTableCell  >
-                <Counter/>
+              <StyledTableCell>{item.price}</StyledTableCell>
+              <StyledTableCell>
+                {tableData.find((obj: any) => obj.id === item.id) && <Counter foodItem={item} />}
               </StyledTableCell>
             </TableRow>
           ))}

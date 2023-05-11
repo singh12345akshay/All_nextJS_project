@@ -1,5 +1,4 @@
 import * as React from "react";
-import Link from "next/link";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -25,6 +24,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "@/store/store";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 const drawerWidth = 240;
 
@@ -127,12 +128,17 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 
 export default function SideBarComponent({ children }: SideBarComponentProps) {
+  const router =useRouter()
   const isSidebarOpen = useSelector((state: any) => state.isSidebarOpen);
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-   const [dialogOpen, setDialogOpen] = React.useState(false);
-
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const tableData = useSelector((state: any) => state.data);
+  
+   const handleClick=(url:string)=>{
+router.push(url)
+   }
   const handleClickOpen = () => {
     setDialogOpen(true);
   };
@@ -145,6 +151,7 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
     { text: "Main Course", url: "/mainCourse/mainCourse" },
     { text: "Dessert", url: "/dessert/dessert" },
   ];
+  const multiplicationResult=tableData[0].price*tableData[0].count
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -182,22 +189,36 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
           <Dialog open={dialogOpen} onClose={handleClose}>
             <DialogTitle>My Order</DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                Here is your Item List
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
+              <DialogContentText>Here is your Item List</DialogContentText>
+              <Box sx={{ display: "flex" }}>
+                <Box
+                  style={{
+                    width: "100px",
+                    height: "90px",
+                    border: "2px solid rgb(17, 24, 39)",
+                    marginRight: "15px",
+                    position: "relative",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Image
+                    src={tableData[0].imagesrc}
+                    fill={true}
+                    sizes="10vw"
+                    alt="food Image"
+                    style={{ borderRadius: "6.5px" }}
+                  ></Image>
+                </Box>
+                <Typography>{tableData[0].title}</Typography>
+                <Typography>
+                  {tableData[0].price} &times; {tableData[0].count}
+                </Typography>
+                multiplicationResult
+              </Box>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleClose}>Subscribe</Button>
+              <Button onClick={handleClose}>Confirm</Button>
             </DialogActions>
           </Dialog>
         </Toolbar>
@@ -233,30 +254,34 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
         <List>
           {["Menu Items"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <Link href="/menu/menu" >
-                <ListItemButton>
-                  <ListItemIcon sx={{ color: "white" }}>
-                    {index % 2 === 0 ? <MenuBookIcon /> : <MenuBookIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </Link>
+              <ListItemButton
+                onClick={() => {
+                  handleClick("/menu/menu");
+                }}
+              >
+                <ListItemIcon sx={{ color: "white" }}>
+                  {index % 2 === 0 ? <MenuBookIcon /> : <MenuBookIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
         <List>
           {items.map(({ text, url }) => (
-            <Link href={url} key={text} passHref>
-              <ListItem disablePadding component="a">
-                <ListItemButton>
-                  <ListItemIcon sx={{ color: "white" }}>
-                    {text === "Starter" ? <FastfoodIcon /> : <RestaurantIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
+            <ListItem disablePadding component="a" key={url}>
+              <ListItemButton
+                onClick={() => {
+                  handleClick(url);
+                }}
+              >
+                <ListItemIcon sx={{ color: "white" }}>
+                  {text === "Starter" ? <FastfoodIcon /> : <RestaurantIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
           ))}
         </List>
       </Drawer>

@@ -1,9 +1,10 @@
 
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Paper, styled, Typography } from '@mui/material';
 import Image from "next/image";
-import Link from "next/link";
 import React from 'react'
 import menuData from '../../data/menu.json'
+import {useRouter} from 'next/router';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "rgb(17, 24, 39)",
@@ -14,15 +15,20 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function MainMenu() {
-  const {item,description}=menuData
+  const {item,description}=menuData;
+  const router = useRouter();
+  const clickHandle=(url:string)=>{
+router.push(url)
+  }
   return (
     <div>
       <Grid container spacing={2}>
         {item.map((item) => {
           return (
             <Grid item key={item.title} xs={12} sm={6} md={6} lg={4}>
-              <Link href={item.page}>
+              {/* <Link href={item.page}> */}
               <Card
+                onClick={()=>clickHandle(item.page)}
                 style={{
                   backgroundColor: "rgb(31, 41, 55)",
                   color: "rgb(209, 213, 219)",
@@ -31,7 +37,12 @@ export default function MainMenu() {
               >
                 <CardActionArea>
                   <CardContent>
-                    <Typography variant="h4" component="div" align="center"sx={{letterSpacing:1.4,fontWeight:600}}>
+                    <Typography
+                      variant="h4"
+                      component="div"
+                      align="center"
+                      sx={{ letterSpacing: 1.4, fontWeight: 600 }}
+                    >
                       {item.title}
                     </Typography>
                   </CardContent>
@@ -52,7 +63,7 @@ export default function MainMenu() {
                   </Box>
                 </CardActionArea>
               </Card>
-              </Link>
+              {/* </Link> */}
             </Grid>
           );
         })}

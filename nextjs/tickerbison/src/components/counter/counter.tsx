@@ -1,58 +1,99 @@
-import { Box, Button, TextField } from '@mui/material';
-import { useState,React } from 'react'
+import { Box, Button, Typography } from '@mui/material';
 import Stack from "@mui/material/Stack";
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectTableData,
+  incrementCount,
+  decrementCount,
+  addRow,
+  deleteRow,
+} from "@/store/store";
+import data from '../../data/menu_item.json'
 
-export default function Counter() {
-    const [count, setCount] = useState(0);
+interface Iprops{
+  foodItem: {
+    id:number,
+    title:string,
+    imagesrc: string,
+    price: string,
+  }
+}
+export default function Counter(props: Iprops) {
+  const { foodItem } = props
+  const tableData = useSelector(selectTableData);
+  const dispatch = useDispatch();
 
-  const handleIncrement = () => {
-    setCount(count + 1);
-  };
-
-  const handleDecrement = () => {
-    setCount(count - 1);
-  };
+  const desiredObject = tableData.find((obj: any) => obj.id === foodItem.id);
+  const handleAddRow = (foodItem:any) => {
+    if (!tableData.find((obj:any) => obj.id === foodItem.id)) {
+      const newRow = {
+        id: foodItem.id,
+        title: foodItem.title,
+        imagesrc: foodItem.imagesrc,
+        price: foodItem.price,
+        count: 1,
+        checked:true
+      };
+      dispatch(addRow(newRow));
+    }
+    else {
+      dispatch(incrementCount(foodItem.id));
+    };
+  }
+  const handleRemoveRow = (foodItem:any) => {
+     if (desiredObject?desiredObject.count === 1:false) {
+       dispatch(deleteRow(foodItem.id));
+     } else {
+       dispatch(decrementCount(foodItem.id));
+     };
+  }
   return (
     <>
-      <Stack direction="row" alignItems="center" spacing={2}>
-      <Button
-        disablePadding
-        onClick={handleDecrement}
-          style={{ backgroundColor: "rgb(209, 213, 219)",color:"rgb(31, 41, 55)", borderRadius: "50%" ,minWidth:'20px',lineHeight:'1',fontSize:'15px',fontWeight:500}}
+      <Stack direction="row" alignItems="center">
+        <Button
+          onClick={() => {handleRemoveRow(foodItem)}}
+          style={{
+            backgroundColor: "rgb(209, 213, 219)",
+            color: "rgb(31, 41, 55)",
+            borderRadius: "50%",
+            minWidth: "10px",
+            lineHeight: "0.7",
+            fontSize: "14px",
+            fontWeight: 500,
+          }}
         >
           -
         </Button>
-      <TextField
-        type="number"
-        value={count}
-        inputProps={{ style: { color:'white',textAlign: "center" } }}
-        InputProps={{ disableUnderline: true }}
-        disabled
-      />
-      <Button
-        disablePadding
-        onClick={handleIncrement}
-          style={{ backgroundColor: "rgb(209, 213, 219)",color:"rgb(31, 41, 55)", borderRadius: "50%" ,minWidth:'20px',lineHeight:'1',fontSize:'15px',fontWeight:500}}
+        <Box 
+        display="flex"
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+          width:'20px',
+          margin:'0 5px',
+          
+        }}>
+          <Typography>
+          {desiredObject?desiredObject.count:""}
+        </Typography>
+        </Box>
+        <Button
+          onClick={() => {
+            handleAddRow(foodItem);
+          }}
+          style={{
+            backgroundColor: "rgb(209, 213, 219)",
+            color: "rgb(31, 41, 55)",
+            borderRadius: "50%",
+            minWidth: "5px",
+            lineHeight: "0.7",
+            fontSize: "14px",
+            fontWeight: 500,
+          }}
         >
           +
         </Button>
-    </Stack>
+      </Stack>
     </>
   );
 }
-
-// <Box style={{ display: "flex", color: "rgb(209, 213, 219)" }}>
-//         <Button
-//         disablePadding
-//           style={{ backgroundColor: "rgb(209, 213, 219)",color:"rgb(31, 41, 55)", borderRadius: "50%" ,minWidth:'20px',lineHeight:'1',fontSize:'15px',fontWeight:500}}
-//         >
-//           +
-//         </Button>
-//         <TextField id="standard-basic" value={counter.value} variant="standard"  style={{textAlign:'center',color:'white',width:'30px',margin:'0px 4px'}}/>
-//       <Button
-//         disablePadding
-//           style={{ backgroundColor: "rgb(209, 213, 219)",color:"rgb(31, 41, 55)", borderRadius: "50%" ,minWidth:'20px',lineHeight:'1',fontSize:'15px',fontWeight:500}}
-//         >
-//           -
-//         </Button>
-//         </Box>
