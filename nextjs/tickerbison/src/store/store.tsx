@@ -2,6 +2,7 @@ import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 interface AppState {
   isSidebarOpen: boolean;
   data: TableData[];
+  order: TableData[];
 }
 interface TableData {
   id:number
@@ -14,6 +15,7 @@ interface TableData {
 const initialState: AppState = {
   isSidebarOpen: false,
   data: [],
+  order:[],
 };
 
 const appSlice = createSlice({
@@ -37,12 +39,15 @@ const appSlice = createSlice({
     deleteRow(state, action: PayloadAction<number>) {
       const index = state.data.findIndex((item) => item.id === action.payload);
   state.data.splice(index, 1);
-    }
+    },
+    orderRecord(state,action:PayloadAction<TableData>){
+      state.order.push(action.payload)
+      state.data.length=0;
+      }
     },
   },
 );
-
-export const { incrementCount, addRow, deleteRow, decrementCount, toggleSidebar } =
+export const { incrementCount, addRow, deleteRow, decrementCount, toggleSidebar,orderRecord } =
   appSlice.actions;
 export const selectTableData = (state: any) => state.data;
 const store = configureStore({ reducer: appSlice.reducer});

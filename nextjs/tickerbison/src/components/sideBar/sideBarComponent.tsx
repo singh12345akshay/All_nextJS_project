@@ -22,12 +22,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "@/store/store";
+import { orderRecord, toggleSidebar } from "@/store/store";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import Image from "next/image";
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge, { BadgeProps } from '@mui/material/Badge';
 const drawerWidth = 240;
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -44,7 +54,14 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
 }));
-
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 1,
+    top: 5,
+    padding: '0 4px',
+    backgroundColor:"#59d55f"
+  },
+}));
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
@@ -131,31 +148,63 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
   const router =useRouter()
   const isSidebarOpen = useSelector((state: any) => state.isSidebarOpen);
   const dispatch = useDispatch();
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [openOrderDialog, setOpenOrderDialog]=React.useState(false)
+  const [orderSnackbar, setOrderSnackbar]=React.useState(false)
   const tableData = useSelector((state: any) => state.data);
-  
+  const order = useSelector((state: any) => state.order);
+  const [hideComponent, setHideComponent]=React.useState(false)
    const handleClick=(url:string)=>{
 router.push(url)
    }
-  const handleClickOpen = () => {
-    setDialogOpen(true);
-  };
+  const handleClickOpen = (sum:any) => {
+    if(sum){setDialogOpen(true)}
+    else{
+setOpen(true)
 
+    }
+  };
+const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+    setOrderSnackbar(false)
+  };
   const handleClose = () => {
     setDialogOpen(false);
+    setOpenOrderDialog(false)
   };
   const items = [
     { text: "Starter", url: "/starter/starter" },
     { text: "Main Course", url: "/mainCourse/mainCourse" },
     { text: "Dessert", url: "/dessert/dessert" },
   ];
-  const multiplicationResult=tableData[0].price*tableData[0].count
+const orderDialoghandle=()=>{
+  setOpenOrderDialog(true)
+}
+  const orderStatus=(tableData:any)=>{
+    setOrderSnackbar(true)
+    setDialogOpen(false);
+    dispatch(orderRecord(tableData))
+  
+}
+  
+  const multiplicationResult:number[]=[]
+ { tableData?.map((tableData) => {
+    multiplicationResult.push(tableData.price * tableData.count);
+  })}
+  const sum = multiplicationResult.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  console.log("tabledata",tableData)
+console.log("order",order)
+
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{ flexGrow: 1 }}>
+      <AppBar position="fixed"  sx={{ flexGrow: 1 }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -183,43 +232,93 @@ router.push(url)
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Button variant="outlined" onClick={handleClickOpen}>
-            My Order
+          <Button disableRipple disableFocusRipple sx={{padding:"0px 0px"}}onClick={()=>{handleClickOpen(sum)}}>
+  <StyledBadge variant="dot"  badgeContent={sum} >
+            <ShoppingCartIcon  sx={{color:'white'}} />
+             </StyledBadge>
           </Button>
-          <Dialog open={dialogOpen} onClose={handleClose}>
-            <DialogTitle>My Order</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Here is your Item List</DialogContentText>
-              <Box sx={{ display: "flex" }}>
+          <Button variant='contained' color='success' onClick={orderDialoghandle} >
+My Order
+          </Button>
+          <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={open} autoHideDuration={1800} onClose={handleSnackbarClose} >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          Cart is Empty !!
+        </Alert>
+      </Snackbar>
+      <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={orderSnackbar} autoHideDuration={2000} onClose={handleSnackbarClose}>
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Your Order Placed Successfully !!
+        </Alert>
+      </Snackbar>
+          <Dialog open={dialogOpen} onClose={handleClose} PaperProps={{ style: { minWidth: '800px' } }}>
+            <DialogTitle style={{textAlign:"center"}}>My Order</DialogTitle>
+            <DialogContent>{tableData?.map((tableData: any,index:any) => (<Box sx={{ display: "flex",alignItems:"center",justifyItems:'center' }} key={tableData.id}>
                 <Box
                   style={{
                     width: "100px",
                     height: "90px",
                     border: "2px solid rgb(17, 24, 39)",
-                    marginRight: "15px",
+                    margin: "15px",
                     position: "relative",
                     borderRadius: "8px",
                   }}
                 >
                   <Image
-                    src={tableData[0].imagesrc}
+                    src={tableData.imagesrc}
                     fill={true}
                     sizes="10vw"
                     alt="food Image"
                     style={{ borderRadius: "6.5px" }}
                   ></Image>
                 </Box>
-                <Typography>{tableData[0].title}</Typography>
-                <Typography>
-                  {tableData[0].price} &times; {tableData[0].count}
+                <Typography style={{width:"440px",marginRight:'20px'}}>{tableData.title}</Typography>
+                <Typography style={{width:"auto",marginRight:'5px'}}>
+                  {tableData.price} &times; {tableData.count} =
                 </Typography>
-                multiplicationResult
-              </Box>
+                {multiplicationResult[index]}
+              </Box>))}
+              <Typography style={{width:'inherit',textAlign:'center'}}>Total Payable Amount: {sum} </Typography>
+              
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleClose}>Confirm</Button>
+            <DialogActions style={{display:'flex', justifyContent: 'center'}}>
+              <Button variant='contained' color="error" onClick={handleClose}  style={{margin:'10px'}}>Cancel</Button>
+              <Button variant='contained' color="success" onClick={()=>{orderStatus(tableData)}} style={{margin:'10px'}}>Confirm</Button>
             </DialogActions>
+          </Dialog>
+          
+          <Dialog open={openOrderDialog} onClose={handleClose} PaperProps={{ style: { minWidth: '800px' } }}>
+            <DialogTitle style={{textAlign:"center"}}>My Order</DialogTitle>
+            <DialogContent>
+              {order.length?order.map((order: any,index:any) => (<Box style={{margin:'8px 3px',padding:'10px',border:'2px solid rgb(17, 24, 39)', borderRadius:'10px'}} key={index}>
+              <Typography style={{textAlign:"center"}} variant='h5'>Order No-{index+1}</Typography>
+              {order.map((order:any)=>(<Box sx={{ display: "flex",alignItems:"center",justifyItems:'center' }} key={order.id}>
+                <Box
+                  style={{
+                    width: "100px",
+                    height: "90px",
+                    border: "2px solid rgb(17, 24, 39)",
+                    margin: "15px",
+                    position: "relative",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Image
+                    src={order.imagesrc}
+                    fill={true}
+                    sizes="10vw"
+                    alt="food Image"
+                    style={{ borderradius: "6.5px" }}
+                  ></Image>
+                </Box>
+                <Typography style={{width:"440px",marginRight:'20px'}}>{order.title}</Typography>
+                <Typography style={{width:"auto",marginRight:'5px'}}>
+                {order.count} 
+                </Typography>
+                
+                </Box>))}
+              
+             </Box> )):<Typography style={{textAlign:"center", color:"red"}}>No Order History</Typography>}
+            </DialogContent>
           </Dialog>
         </Toolbar>
       </AppBar>

@@ -157,7 +157,7 @@ export default function TableComponent({ item }:ImenuItem[]) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log(tableData)
+  // console.log(tableData)
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="TableComponent">
