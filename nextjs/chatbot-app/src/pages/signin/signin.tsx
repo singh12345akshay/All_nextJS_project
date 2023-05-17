@@ -59,7 +59,6 @@ export default function Signin() {
                   height={54}
                 />
               </LoginLogoWraper>
-              <form onSubmit={handlers.handleSubmit}>
                 <Box>
                   <TextField
                     sx={(theme) => ({
@@ -105,20 +104,7 @@ export default function Signin() {
                   >
                     Sign In
                   </CustomSignInButton>
-                  {/* <CustomSignInButton
-                    variant="contained"
-                    href="#contained-buttons"
-                    onClick={handlers.handleSubmit}
-                    disabled={
-                      getters.email.isValid && getters.password.isValid
-                        ? false
-                        : true
-                    }
-                  >
-                    create new account
-                  </CustomSignInButton> */}
                 </Box>
-              </form>
             </LoginCard>
           </Box>
         </Box>

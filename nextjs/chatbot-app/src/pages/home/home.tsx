@@ -15,20 +15,52 @@ import {
   menuItemlogo,
 } from "../../assets/images";
 import { Button, Card, CardActionArea, CardContent, Grid } from "@mui/material";
-import jsonData from "../sampleoutput.json";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import axios from "axios";
+import { useSelector } from "react-redux";
 const drawerWidth = 240;
 
 export default function Home() {
-  const { bot } = jsonData;
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [bot, setBot] = useState([]);
   const router = useRouter();
+  const authToken = useSelector((state: any) => state.authToken);
   const handleLogout = () => {
     setIsLoggedIn(false);
     router.push("/signin/signin");
   };
 
+  useEffect(() => {
+    // Define a function to fetch the data from the API
+    const fetchData = async () => {
+      try {
+        // Make a GET request to the API endpoint
+        const response = await axios.get(
+          "https://chatbotapps.mindpath.tech/api/v1/user/bots",
+          {
+            headers: {
+              Authorization:`Bearer ${authToken}`
+            }
+          }
+        );
+
+        // Handle the response
+        console.log(response.data); // Access the response data
+          setBot(response.data.body)
+        // Set the cards state with the response data
+      } catch (error) {
+        // Handle any errors that occur during the request
+        console.error(error);
+        // Display an error message to the user
+      }
+    };
+
+    // Call the fetchData function when the component mounts
+    fetchData();
+  }, []);
+  // console.log(authToken)
+  // console.log(bot)
   return (
     <>
       <Head>
@@ -61,7 +93,7 @@ export default function Home() {
             </Button>
           </Box>
           <List>
-            {["Bot"].map((text, index) => (
+            {["Bot"].map((text) => (
               <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
                 <ListItemButton>
                   <ListItemIcon>
@@ -170,9 +202,9 @@ export default function Home() {
             BOT
           </Typography>
           <Grid container spacing={2}>
-            {bot.map((item) => {
+            {bot.map((bot) => {
               return (
-                <Grid item key={item.name} xs={12} sm={6} md={4} lg={3}>
+                <Grid item key={bot.id} xs={12} sm={6} md={4} lg={3}>
                   <Card sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <CardContent>
@@ -191,7 +223,7 @@ export default function Home() {
                             WebkitBoxOrient: "vertical",
                           }}
                         >
-                          {item.name}
+                          {bot.name}
                         </Typography>
                       </CardContent>
                       <Box

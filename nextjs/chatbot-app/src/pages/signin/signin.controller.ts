@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { RegexLibrary } from '../Regex';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { useDispatch } from "react-redux";
+import { setAuthToken } from 'src/store/store';
+
 
 export default function SigninController() {
     const [email, setEmail] = useState({
@@ -14,7 +18,9 @@ export default function SigninController() {
       const [error, setError] = useState("");
     const [emailHelpertext, setEmailHelpertext] = useState("");
     const [passwordHelpertext, setpasswordHelpertext] = useState("");
-    const router = useRouter();
+  const router = useRouter();
+  const dispatch = useDispatch();
+
     function validateEmail(e: { target: { value: string } }) {
         if (RegexLibrary.MAIL.test(e.target.value)) {
           setEmail({
@@ -33,72 +39,24 @@ export default function SigninController() {
 
       const handleSubmit = async (e: { preventDefault: () => void; }) => {
         try {
-          const res = await fetch("http://localhost:3005/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          });
-          const data = await res.json();
-          console.log(data)
-          if (data.token) {
-            // If we received a token from the server, we can assume the login was successful.
-            // You may want to store this token in local storage or a cookie to persist the user's
-            // authentication state across sessions.
-            console.log("Login successful");
-            debugger;
-          } else {
-            // If we did not receive a token from the server, there was an error with the login request.
-            setError("Invalid email or password");
-          }
+              const response = await axios.post(
+                "https://chatbotapps.mindpath.tech/api/v1/user/login",
+                {
+                  email: email.value,
+                  password: password.value,
+                }
+              );
+          console.log(response.data)
+          const authToken = response.data.body.token;
+        dispatch(setAuthToken(authToken));
+          router.push("/home/home");
+
         } catch (error) {
           console.error("Error logging in", error);
           setError("An error occurred while logging in");
         }
       };
-      // async function handleClick() {
-      //   if (email.value === "" || password.value === "") {
-      //     setEmail({
-      //       value: email.value,
-      //       isValid: email.value === "" ? false : true,
-      //     });
-      //     setPassword({
-      //       value: password.value,
-      //       isValid: false,
-      //     });
-      //     setEmailHelpertext(email.value === "" ? "This field is required" : "");
-      //     setpasswordHelpertext(
-      //       password.value === "" ? "This field is required" : ""
-      //     );
-      //   } else {
-      //     e.preventDefault();
-      //     const response=await fetch("http://localhost:3005/api/auth/login",{
-      //       method:'POST',
-      //       headers:{
-      //         'Content-Type':'application/json'
-      //       },
-      //       body: JSON.stringify({email: email, password: password})
-      //     });
-      //     const json=await response.json()
-      //     console.log(json);
-      //     // if (
-      //     //   email.value === "mindpath@ebotify.com" &&
-      //     //   password.value === "Akshay@123"
-      //     // ) {
-      //     //   router.push("/home/home");
-      //     // } else {
-      //     //   setEmail({
-      //     //     value: email.value,
-      //     //     isValid:false,
-      //     //   });
-      //     //   setPassword({
-      //     //     value: password.value,
-      //     //     isValid: false,
-      //     //   });
-      //     //   setEmailHelpertext("Email Id or Password is Inavlid !!");
-      //     //   setpasswordHelpertext("Email Id or Password is Inavlid !!");
-      //     // }
-      //   }
-      // };
+      
       function validatePassword(e: { target: { value: string } }) {
         if (RegexLibrary.PASSWORD.test(e.target.value)) {
           setPassword({

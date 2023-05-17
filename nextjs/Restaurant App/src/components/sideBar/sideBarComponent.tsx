@@ -39,21 +39,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: 1,
@@ -223,15 +208,6 @@ console.log("order",order)
           >
             Menu
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
           <Button disableRipple disableFocusRipple sx={{padding:"0px 0px"}}onClick={()=>{handleClickOpen(sum)}}>
   <StyledBadge variant="dot"  badgeContent={sum} >
             <ShoppingCartIcon  sx={{color:'white'}} />
@@ -307,7 +283,7 @@ My Order
                     fill={true}
                     sizes="10vw"
                     alt="food Image"
-                    style={{ borderradius: "6.5px" }}
+                    style={{ borderRadius: "6.5px" }}
                   ></Image>
                 </Box>
                 <Typography style={{width:"440px",marginRight:'20px'}}>{order.title}</Typography>
