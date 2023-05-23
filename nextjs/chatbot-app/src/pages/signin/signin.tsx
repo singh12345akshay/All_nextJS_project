@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import {
   Alert, Box,
+  Snackbar,
   TextField
 } from "@mui/material";
 import {
@@ -107,7 +108,16 @@ export default function Signin() {
                   >
                     Sign In
                   </CustomSignInButton>
-                </Box>
+              </Box>
+              {/* <Box><Snackbar
+  open={Boolean(snackbarData.message)}
+  autoHideDuration={3000}
+  onClose={() => setSnackbarData({ message: '', severity: 'success' })}
+>
+  <Alert onClose={() => setSnackbarData({ message: '', severity: 'success' })} severity={snackbarData.severity}>
+    {snackbarData.message}
+  </Alert>
+</Snackbar></Box> */}
             </LoginCard>
           </Box>
         </Box>

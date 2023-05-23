@@ -37,8 +37,7 @@ export default function Home() {
           );
 
           const data: apiResponse = response.data.body;
-          setBot(data);
-          // console.log(bot)
+          await setBot(data);
         } catch (error) {
           console.error(error);
         }
@@ -49,13 +48,8 @@ export default function Home() {
 
       fetchData();
   }, []);
-  // console.log(authToken)
   
-  // console.log("bot:",bot)
-//   const handleClick=(botName: string)=>{
-//    router.push({botname}/{botname})
-//  }
-  
+ console.log(bot)
   return (
     <>
       <Head>
@@ -82,9 +76,7 @@ export default function Home() {
               margin:'5px'
             }}>
           <Grid container spacing={3} >
-            {console.log(bot)}
-
-                {bot.map((bot,index) => {
+                {bot?.map((bot,index) => {
               return (
                 // <Link href={`/bot/${bot.name.toLowerCase()}`} as={`/${bot.id}}`} key={bot._id}> 
                   <Grid item  key={bot._id} xs={12} sm={6} md={4} lg={3}>

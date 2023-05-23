@@ -19,12 +19,6 @@ declare global {
 export default function EstateBot() {
   const router = useRouter();
   const { slug } = router.query;
-
-  // document.body.appendChild(script);}
-// const loadScript=()=>{
-//       //   window.initPayload = "hi";
-//       //  window.metadata = {};
-      
   
 console.log(slug)
   return (

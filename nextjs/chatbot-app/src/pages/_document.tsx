@@ -8,7 +8,6 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <script>var muak = `&quot;; var mbn = `&quot;</script>
         <script
           type="text/javascript"
           src="https://mindpathtech-cdn.azureedge.net/chatbot/jquery.js"></script>

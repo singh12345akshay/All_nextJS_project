@@ -39,11 +39,12 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
     setIsLoggedIn(false);
     router.push("/signin/signin");
   };
-
+ const handleClick=(url:string)=>{
+router.push(url)
+   }
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        
         <AppBar position="fixed" sx={{ flexGrow: 1 }}>
           <Box
             sx={{
@@ -131,7 +132,11 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
             justifyContent="center"
             alignItems="center"
             paddingY={1}>
-            <Button variant="text">
+            <Button
+              variant="text"
+              onClick={() => {
+                handleClick("/home/home");
+              }}>
               <Image
                 src={ebotifylogo.src}
                 alt={"Company image"}
@@ -143,7 +148,10 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
           <List>
             {["Bot"].map((text) => (
               <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => {
+                    handleClick("/home/home");
+                  }}>
                   <ListItemIcon>
                     <Image
                       src={menuItemlogo.src}

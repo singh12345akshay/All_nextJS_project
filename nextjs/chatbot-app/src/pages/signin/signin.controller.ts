@@ -50,11 +50,6 @@ export default function SigninController() {
           const authToken = response.data.body.token;
              localStorage.setItem("authToken", JSON.stringify(authToken));
              const storedData = localStorage.getItem("authToken");
-             if (storedData) {
-               const authToken = JSON.parse(storedData);
-               
-             }
-        // dispatch(setAuthToken(authToken));
           router.push("/home/home");
 
         } catch (error) {
