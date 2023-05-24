@@ -3,6 +3,7 @@ import { RegexLibrary } from '../Regex';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 import { setAuthToken } from 'src/store/store';
 
 
@@ -20,7 +21,7 @@ export default function SigninController() {
     const [passwordHelpertext, setpasswordHelpertext] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
-
+const { enqueueSnackbar } = useSnackbar();
     function validateEmail(e: { target: { value: string } }) {
         if (RegexLibrary.MAIL.test(e.target.value)) {
           setEmail({
@@ -47,12 +48,27 @@ export default function SigninController() {
                 }
               );
           console.log(response.data)
+          enqueueSnackbar("Sign in successful!", {
+            variant: "success",
+            autoHideDuration:2000,
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "center",
+            },
+          });
           const authToken = response.data.body.token;
              localStorage.setItem("authToken", JSON.stringify(authToken));
              const storedData = localStorage.getItem("authToken");
           router.push("/home/home");
 
         } catch (error) {
+          enqueueSnackbar("Sign in failed!", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "center",
+            },
+          });
           console.error("Error logging in", error);
           setError("An error occurred while logging in");
         }

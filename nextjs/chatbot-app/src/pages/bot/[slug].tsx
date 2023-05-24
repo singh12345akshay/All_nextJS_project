@@ -7,6 +7,8 @@ import { estateBot } from "src/assets/images";
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
 import BotPageComponent from "src/components/botPage/botPageComponent";
 import { useRouter } from "next/router";
+import { setAuthToken } from 'src/store/store';
+import AuthProvider from "src/components/authProvider/authProvider";
 
 
 declare global {
@@ -20,13 +22,16 @@ export default function EstateBot() {
   const router = useRouter();
   const { slug } = router.query;
   
+  
+  
 console.log(slug)
   return (
     <>
+      <AuthProvider>
       <SideBarComponent>
-      
         <BotPageComponent name={slug} />
-        </SideBarComponent>
+      </SideBarComponent>
+      </AuthProvider>
     </>
   );
 }

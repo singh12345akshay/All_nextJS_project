@@ -15,6 +15,7 @@ import {
 import React, { useState } from "react";
 import { ebotifylogo, menuItemlogo, userpic } from "src/assets";
 import Image from "next/image";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
 const drawerWidth = 240;
 interface SideBarComponentProps {
@@ -37,6 +38,7 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
   const theme = useTheme();
   const handleLogout = () => {
     setIsLoggedIn(false);
+    localStorage.clear();
     router.push("/signin/signin");
   };
  const handleClick=(url:string)=>{
@@ -98,20 +100,7 @@ router.push(url)
                 alt={"user image"}
                 width={50}
                 height={50}></Image>
-              <Button
-                variant="contained"
-                onClick={handleLogout}
-                sx={{
-                  bgcolor: "#1b63f6",
-                  borderRadius: 7,
-                  color: "#fff",
-                  padding: 1,
-                  paddingRight: 2,
-                  paddingLeft: 2,
-                  marginLeft: 3,
-                }}>
-                Logout
-              </Button>
+              
             </div>
           </Box>
         </AppBar>
@@ -122,11 +111,12 @@ router.push(url)
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
-              bgcolor: "#7121ff",
+              bgcolor: "#242A38",
             },
           }}
           variant="permanent"
           anchor="left">
+          <div style={{ flex: "1 1 auto" }}>
           <Box
             display="flex"
             justifyContent="center"
@@ -165,6 +155,27 @@ router.push(url)
               </ListItem>
             ))}
           </List>
+          </div>
+          <div style={{ textAlign: "center", padding: "10px" }}>
+          <Button
+                variant="contained"
+                onClick={handleLogout}
+                startIcon={<LogoutIcon />}
+                sx={{
+                  bgcolor: "#1b63f6",
+                  borderRadius: 7,
+                  // color: "#fff",
+                  // padding: 1,
+                  // paddingRight: 2,
+                  // paddingLeft: 2,
+                  // marginLeft: 3,
+                  textTransform: "none"
+                }} >
+                <Typography variant="button" sx={{ marginLeft: "8px" }}>
+        LOGOUT
+      </Typography>
+              </Button>
+              </div>
         </Drawer>
         <Main>{children}</Main>
       </Box>
