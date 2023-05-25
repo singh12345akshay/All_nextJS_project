@@ -9,10 +9,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
 
     <SnackbarProvider>
-          
+          <AuthProvider>
       <Provider store={store}>
           <Component {...pageProps} />
       </Provider>
+      </AuthProvider>
     </SnackbarProvider>
     
   );

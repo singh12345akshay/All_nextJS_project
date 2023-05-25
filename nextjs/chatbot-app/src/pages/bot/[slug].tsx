@@ -27,11 +27,9 @@ export default function EstateBot() {
 console.log(slug)
   return (
     <>
-      <AuthProvider>
       <SideBarComponent>
         <BotPageComponent name={slug} />
       </SideBarComponent>
-      </AuthProvider>
     </>
   );
 }
