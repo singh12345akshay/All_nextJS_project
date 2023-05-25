@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "notistack";
-import { setAuthToken } from 'src/store/store';
 
 
 export default function SigninController() {
@@ -47,7 +46,6 @@ const { enqueueSnackbar } = useSnackbar();
                   password: password.value,
                 }
               );
-          console.log(response.data)
           enqueueSnackbar("Sign in successful!", {
             variant: "success",
             autoHideDuration:2000,
@@ -59,7 +57,7 @@ const { enqueueSnackbar } = useSnackbar();
           const authToken = response.data.body.token;
              localStorage.setItem("authToken", JSON.stringify(authToken));
              const storedData = localStorage.getItem("authToken");
-          router.push("/home/home");
+          router.push("/home");
 
         } catch (error) {
           enqueueSnackbar("Sign in failed!", {

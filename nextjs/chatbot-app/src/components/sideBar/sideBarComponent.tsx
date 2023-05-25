@@ -39,7 +39,7 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.clear();
-    router.push("/signin/signin");
+    router.push("/signin");
   };
  const handleClick=(url:string)=>{
 router.push(url)

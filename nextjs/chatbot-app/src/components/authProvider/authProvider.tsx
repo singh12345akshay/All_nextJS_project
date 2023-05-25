@@ -9,14 +9,21 @@ interface AuthproviderProps {
 export default function AuthProvider({ children }: AuthproviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  
+
   const checkAuthtoken = async () => {
     const currentPage = router.pathname;
+
     const authToken = localStorage.getItem("authToken");
-    {console.log("i'm here:",currentPage)}
-    if (!authToken && currentPage !== "/signin/signin") {
-      {console.log("i'm here:",authToken)}
-      await router.push("/signin/signin");
+
+    {
+      console.log("i'm here:", currentPage);
+    }
+
+    if (!authToken && currentPage !== "/signin") {
+      {
+        console.log("i'm here:", authToken);
+      }
+      await router.push("/signin");
       enqueueSnackbar("Please SignIn First", {
         variant: "error",
         preventDuplicate: true,
@@ -25,24 +32,23 @@ export default function AuthProvider({ children }: AuthproviderProps) {
           horizontal: "center",
         },
       });
-    } else if (authToken && currentPage === "/signin/signin") {
+    } else if (authToken && currentPage === "/signin") {
       router.push("/home/home");
-    } else if (!authToken && currentPage === "/signin/signin") {
-      return 
     }
   };
   useEffect(() => {
     checkAuthtoken();
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
-  }, []);
+    }, 1500);
+  }, [router]);
   if (isLoading) {
-    return <div></div>;
+    return (
+      <div>
+        
+      </div>
+    );
   }
 
   return <>{children}</>;
-}
-function elseif() {
-  throw new Error("Function not implemented.");
 }
