@@ -164,12 +164,7 @@ router.push(url)
                 sx={{
                   bgcolor: "#1b63f6",
                   borderRadius: 7,
-                  // color: "#fff",
-                  // padding: 1,
-                  // paddingRight: 2,
-                  // paddingLeft: 2,
-                  // marginLeft: 3,
-                  textTransform: "none"
+                  
                 }} >
                 <Typography variant="button" sx={{ marginLeft: "8px" }}>
         LOGOUT
