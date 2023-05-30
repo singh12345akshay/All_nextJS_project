@@ -8,3 +8,4 @@ export { default as ebotifylogo } from "./ebotifylogo.png";
 export { default as cardlogo } from "./cardlogo.png";
 export { default as userpic } from "./userpic.png";
 export { default as estateBot } from "./morganrandall.png";
+export { default as nodatafound } from "./nodatafound.svg";

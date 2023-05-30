@@ -15,7 +15,9 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableContainer,
+  TablePagination,
   TableHead,
   TableRow,
   TextField,
@@ -26,10 +28,18 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import IconButton from '@mui/material/IconButton';
 import axios from "axios";
 import React, { useState, useEffect, ChangeEvent } from "react";
+import { useTheme } from '@mui/material/styles';
+import Image from "next/image";
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
 import { useSnackbar } from "notistack";
+import {nodatafound} from "../../assets/images";
 
 const styledButton = styled(Button)(() => ({
   [`&.${ButtonBase}`]: {
@@ -60,6 +70,14 @@ const StyledTableCell = styled(TableCell)(() => ({
   minWidth: "120px",
 }));
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  // "&[disabled]": {
+  //   color: "red"
+  // },
+  // // color: "white",
+ 
+}));
+
 interface IapiResponse {
   status: string;
   _id: string;
@@ -68,13 +86,80 @@ interface IapiResponse {
 }
 interface ApiResponseArray extends Array<IapiResponse> { }
 
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number,
+  ) => void;
+}
+
+function TablePaginationActions(props: TablePaginationActionsProps): JSX.Element {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, page + 1);
+  };    
+
+  const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <StyledIconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </StyledIconButton>
+      <StyledIconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </StyledIconButton>
+      <StyledIconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </StyledIconButton>
+      <StyledIconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </StyledIconButton>
+    </Box>
+  );
+}
 export default function CustomerRequest() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState([]);
   const [isEdit, setIsEdit]=useState(false)
   const [isLoading, setIsLoading] = useState(true);
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-   const [selectedItem, setSelectedItem] = useState(null);
+   const [selectedItem, setSelectedItem] = useState({});
    const [addRequestDetails, setAddRequestDetails]=useState({
     description:"",
     status:""
@@ -86,13 +171,12 @@ export default function CustomerRequest() {
   });
   
   const [dialogOpen, setDialogOpen] = useState(false);
-
- const handleDeleteClick = (data:IapiResponse) => {
-  console.log(data)
+ const handleDeleteClick = (data:IapiResponse | ApiResponseArray ) => {
     setSelectedItem(data);
     setOpenDeleteDialog(true);
   };
    const handleDeleteCancel = () => {
+    setSelectedItem({})
     setOpenDeleteDialog(false);
   };
 const handleAdd=()=>{
@@ -171,7 +255,21 @@ const handleAdd=()=>{
     useEffect(() => {
       fetchData();
     }, []);
-
+// useEffect(()=>{
+//   if(data.length)
+// {if(data.length % rowsPerPage===0){
+// setPage(page-1)
+// }}
+// },[data.length])
+const autoPageChange=async ()=>{
+  if(data.length){
+    if(data.length % rowsPerPage-1===0){
+      setPage(page-1)
+    }
+    // if(data.length % rowsPerPage===0)
+    // {console.log("this:",data.length % rowsPerPage)}
+  }
+}
     const addRequest = async (data) => {
       const payload = {
         description: data.description,
@@ -301,7 +399,7 @@ const handleAdd=()=>{
         );
         console.log(response);
         if (response.ok) {
-          fetchData();
+          await fetchData();
           enqueueSnackbar("Request Deleted seccessfully ", {
             variant: "success",
             autoHideDuration: 2500,
@@ -321,6 +419,7 @@ const handleAdd=()=>{
           console.error("Update failed");
         
         }
+        setSelectedItem({})
         setOpenDeleteDialog(false)
       }
     };
@@ -349,14 +448,25 @@ const handleAdd=()=>{
           return "default";
       }
     };
+
+    const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
     // console.log(data)
     return (
       <SideBarComponent>
         <div>
           <Box sx={{
-            // display:"flex",
-            // alignItems:"flex-end",
-            // justifyitems:"center",
             textAlign: "right",
             marginBottom: "8px",
           }}>
@@ -371,7 +481,7 @@ const handleAdd=()=>{
             <Button
               startIcon={<DeleteIcon />}
               variant="contained"
-              onClick={() => { deleteRequest(data)}}
+              onClick={() => { handleDeleteClick(data)}}
               color="primary"
               sx={{ marginLeft: "10px" }}>
               Clear All
@@ -388,8 +498,36 @@ const handleAdd=()=>{
                     <StyledTableCell>Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {data.map((data: IapiResponse) => (
+                {data.length === 0 ? (
+                  <TableRow sx={{ backgroundColor: "#111827", color: "white" }}>
+          <TableCell colSpan={4} >
+            <Box
+
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height={350}
+      fontWeight="bold"
+      fontSize={20}
+      position="relative"
+    >
+     <Image
+     src={nodatafound.src}
+     alt={"No Data Found"}
+     fill={true}
+     />
+     
+    </Box>
+
+          </TableCell>
+        </TableRow>
+                  
+                ) : (<>
+                  <TableBody>
+                  {(rowsPerPage > 0
+            ?data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : data
+          ).map((data: IapiResponse) => (
                     <TableRow
                       key={data._id}
                       sx={{
@@ -428,6 +566,50 @@ const handleAdd=()=>{
                     </TableRow>
                   ))}
                 </TableBody>
+                <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              colSpan={5}
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  "aria-label": "rows per page",
+                },
+                sx:{
+
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+              sx={{
+                backgroundColor: "rgb(17, 24, 39)",
+                borderTop: "1px solid rgb(45, 55, 72)",
+                color: "rgb(237, 242, 247)",
+                "& .MuiSvgIcon-root": {
+                  color: "white", // Change the color to any desired color
+                },
+                "& .MuiTablePagination-menuItem": {
+                  backgroundColor: "#111827" ,
+                  priority: 1000,
+                  textAlign:"center",
+                  color:"black"
+                },
+                "& .MuiTablePagination-root": {
+borderRadius:"5px",
+                  backgroundColor: "#111827",
+                 
+                }
+              }}
+            />
+          </TableRow>
+        </TableFooter></>
+                )}
+                
               </Table>
             </TableContainer>
           </Box>
@@ -551,10 +733,12 @@ const handleAdd=()=>{
                 }}>
                 No
               </Button>
+           
               <Button
                 variant="contained"
-                onClick={() => {
-                  deleteRequest(selectedItem);
+                onClick={async() => {
+                  await deleteRequest(selectedItem);
+                  autoPageChange();
                 }}
                 color="success"
                 sx={{

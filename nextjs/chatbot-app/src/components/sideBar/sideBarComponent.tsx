@@ -140,7 +140,7 @@ router.push(url)
               <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
                 <ListItemButton
                   onClick={() => {
-                    handleClick("/home/home");
+                    handleClick("/home");
                   }}>
                   <ListItemIcon>
                     <Image
