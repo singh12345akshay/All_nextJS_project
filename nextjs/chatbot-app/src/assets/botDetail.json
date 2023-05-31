@@ -33,17 +33,17 @@
       },
       {
         "id": "7",
-        "imagesrc": "/images/morganrandall.png",
-        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
+        "imagesrc": "/images/chatbot.gif",
+        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/appointment/appointment-booking/main.js"
       },
       {
         "id": "8",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/hawaii.jpg",
         "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
       },
       {
         "id": "9",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/florida.jpg",
         "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
       },
       {
@@ -328,8 +328,8 @@
       },
       {
         "id": "66",
-        "imagesrc": "/images/morganrandall.png",
-        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
+        "imagesrc": "/images/prime-array.png",
+        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/prime-array-prod/prime-array/main.js"
       },
       {
         "id": "67",
@@ -368,7 +368,7 @@
       },
       {
         "id": "74",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/kidspace.png",
         "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/hobbledown/kidspace-romford-dev/main.js"
       },
       {
@@ -393,8 +393,8 @@
       },
       {
         "id": "79",
-        "imagesrc": "/images/morganrandall.png",
-        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
+        "imagesrc": "/images/chatbot.gif",
+        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/Chatgpt-demo/Chatgpt-demo/main.js"
       },
       {
         "id": "80",

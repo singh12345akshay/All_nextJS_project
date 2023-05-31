@@ -117,19 +117,19 @@ function TablePaginationActions(props: TablePaginationActionsProps): JSX.Element
   const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
-
+console.log(page)
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
       <StyledIconButton
         onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
+        disabled={page <= 0}
         aria-label="first page"
       >
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </StyledIconButton>
       <StyledIconButton
         onClick={handleBackButtonClick}
-        disabled={page === 0}
+        disabled={page <= 0}
         aria-label="previous page"
       >
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
@@ -254,20 +254,16 @@ const handleAdd=()=>{
     };
     useEffect(() => {
       fetchData();
+      setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
     }, []);
-// useEffect(()=>{
-//   if(data.length)
-// {if(data.length % rowsPerPage===0){
-// setPage(page-1)
-// }}
-// },[data.length])
+
 const autoPageChange=async ()=>{
   if(data.length){
-    if(data.length % rowsPerPage-1===0){
+    if(data.length % rowsPerPage-1===0 & page>=1){
       setPage(page-1)
     }
-    // if(data.length % rowsPerPage===0)
-    // {console.log("this:",data.length % rowsPerPage)}
   }
 }
     const addRequest = async (data) => {
@@ -293,12 +289,12 @@ const autoPageChange=async ()=>{
         console.log(response);
         if (response.ok) {
           fetchData();
-          enqueueSnackbar("Request Added seccessfully ", {
+          enqueueSnackbar("Request Added successfully !!", {
             variant: "success",
             autoHideDuration: 2500,
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
         } else {
@@ -306,7 +302,7 @@ const autoPageChange=async ()=>{
             variant: "error",
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
         }
@@ -337,21 +333,20 @@ const autoPageChange=async ()=>{
         console.log(response);
         if (response.ok) {
           fetchData();
-          enqueueSnackbar("Request Updated seccessfully ", {
+          enqueueSnackbar("Request Updated successfully ", {
             variant: "success",
             autoHideDuration: 2500,
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
-          console.log(response.message);
         } else {
           enqueueSnackbar("Request Updation Failed !!", {
             variant: "error",
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
           console.error("Update failed");
@@ -400,12 +395,12 @@ const autoPageChange=async ()=>{
         console.log(response);
         if (response.ok) {
           await fetchData();
-          enqueueSnackbar("Request Deleted seccessfully ", {
+          enqueueSnackbar("Deleted successfully ", {
             variant: "success",
             autoHideDuration: 2500,
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
         } else {
@@ -413,7 +408,7 @@ const autoPageChange=async ()=>{
             variant: "error",
             anchorOrigin: {
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             },
           });
           console.error("Update failed");
@@ -463,6 +458,15 @@ const autoPageChange=async ()=>{
     setPage(0);
   };
     // console.log(data)
+     if (isLoading) {
+    return (
+      <div>
+        <SideBarComponent>
+          <></>
+        </SideBarComponent>
+      </div>
+    );
+  }
     return (
       <SideBarComponent>
         <div>
@@ -475,15 +479,17 @@ const autoPageChange=async ()=>{
               variant="contained"
               onClick={() => { handleAdd() }}
               color="primary"
+              sx={{textTransform: "Capitalize",fontWeight: "700"}}
             >
               Add Request
             </Button>
             <Button
               startIcon={<DeleteIcon />}
               variant="contained"
+              disabled={!data.length}
               onClick={() => { handleDeleteClick(data)}}
               color="primary"
-              sx={{ marginLeft: "10px" }}>
+              sx={{ marginLeft: "10px",textTransform: "Capitalize",fontWeight: "700"}}>
               Clear All
             </Button>
           </Box>

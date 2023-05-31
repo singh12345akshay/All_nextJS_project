@@ -13,7 +13,8 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-import { ebotifylogo, menuItemlogo, userpic } from "src/assets";
+import Divider from '@mui/material/Divider';
+import { ebotifylogo, menuItemlogo, userpic ,} from "src/assets";
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
@@ -154,7 +155,30 @@ router.push(url)
                 </ListItemButton>
               </ListItem>
             ))}
-          </List>
+            </List>
+            {/* <Divider sx={{backgroundColor:"white"}}/>
+
+            <List >
+            {[{name:"Web Bot",img:webBot},{name:"WhatsApp Bot",img:menuItemlogo},{name:"Facebook Bot",img:menuItemlogo},{name:"Telegram Bot",img:menuItemlogo}].map((obj) => (
+              <ListItem key={obj.name} disablePadding sx={{ color:"white"}}>
+                <ListItemButton
+                sx={{fontWeight:"700"}}
+                  onClick={() => {
+                    handleClick("/home");
+                  }}>
+                  <ListItemIcon>
+                    <Image
+                      src={obj.img.src}
+                      alt={"Company image"}
+                      width={30}
+                      height={30}
+                    />
+                  </ListItemIcon>
+                  <ListItemText sx={{fontWeight:"500"}} primary={obj.name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+            </List> */}
           </div>
           <div style={{ textAlign: "center", padding: "10px" }}>
           <Button

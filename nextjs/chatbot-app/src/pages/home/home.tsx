@@ -3,11 +3,12 @@ import Image from "next/image";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { cardlogo } from "../../assets/images";
-import { Card, CardActionArea, CardContent, Grid } from "@mui/material";
+import { Card, CardActionArea, CardContent, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
+import FuzzySearch from 'fuzzy-search';
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
 
 export interface Idata {
@@ -17,9 +18,12 @@ export interface Idata {
 
 export type apiResponse = Idata[];
 
+
 export default function Home() {
   const [bot, setBot] = useState<apiResponse>([]);
   const router = useRouter();
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const fetchData = async () => {
     const storedData = localStorage.getItem("authToken");
@@ -50,9 +54,24 @@ export default function Home() {
 
     fetchData();
   }, []);
-{
-  console.log("bot", bot);
-}
+  {
+  }
+  const handleSearch = (event) => {
+    const { value } = event.target;
+    setSearchText(value);
+
+    if (value.trim() === '') {
+      setSearchResults(bot);
+      console.log("bot",bot)// Reset search results to original data
+    } else {
+      const filteredResults = bot.filter((item) =>
+        item.name.toLowerCase().includes(value.toLowerCase())
+      );
+      console.log("filteredResults", filteredResults);
+      setSearchResults(filteredResults);
+    }
+  };
+  const itemsToRender = searchText.trim() === '' ? bot : searchResults;
   return (
     <>
       <Head>
@@ -73,19 +92,26 @@ export default function Home() {
               }}>
               BOT
             </Typography>
+            <TextField
+              label="Search"
+              value={searchText}
+              onChange={handleSearch}
+              fullWidth
+              sx={{ marginBottom: '20px' }}
+            />
             <Box
               style={{
                 margin: "5px",
               }}>
               <Grid container spacing={3}>
-                {bot?.map((bot, index) => {
+                {itemsToRender.map((bot, index) => {
                   return (
                     // <Link href={`/bot/${bot.name.toLowerCase()}`} as={`/${bot.id}}`} key={bot._id}>
-                    <Grid item key={bot._id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                       <Link href={`/bot/${index + 1}`}>
                         <Card
                           sx={{ maxWidth: 380 }}
-                          // onClick={()=>{handleClick(bot.name)}}
+                        // onClick={()=>{handleClick(bot.name)}}
                         >
                           <CardActionArea>
                             <CardContent>
@@ -133,3 +159,4 @@ export default function Home() {
     </>
   );
 }
+ 
