@@ -1,13 +1,15 @@
 import { Box, TextField , Typography} from '@mui/material'
 import Head from "next/head";
-import Image from "next/image";
 import React from 'react'
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
 import { LoginCard, CustomSignInButton } from './manageUser.style';
 import ManageuserController from './manageuser.controller';
+import { useSelector } from 'react-redux';
 
 export default function ManageUser() {
-    const { getters, handlers } = ManageuserController();
+  const { getters, handlers } = ManageuserController();
+  const home = useSelector((state) => state);
+  console.log("data",home)
   return (
       <>
       <SideBarComponent>

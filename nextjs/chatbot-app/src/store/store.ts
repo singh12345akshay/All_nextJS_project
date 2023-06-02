@@ -1,29 +1,31 @@
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 
-interface AppState {
-  data: botData[];
-}
 
-interface botData{
-  id:string;
-botName:string;
-imagesrc:string;
-botscript:string;
+interface Item {
+  id: string;
+  name: string;
+}
+interface AppState {
+  data: Item[];
 }
 
 const initialState: AppState = {
-  data:[]
-}
+  data: [],
+};
+
+
 const dataSlice = createSlice({
-  name: "data",
+  name: 'botList',
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<botData>) => {
-      state.data.push
+    setData(state, action: PayloadAction<Item[]>){
+      state.data = action.payload;
     },
   },
 });
-export const { setData} = dataSlice.actions;
+
+export const { setData } = dataSlice.actions;
+// export const homePageData=(state:any)=> state.data
 const store = configureStore({ reducer: dataSlice.reducer });
 export default store;
 

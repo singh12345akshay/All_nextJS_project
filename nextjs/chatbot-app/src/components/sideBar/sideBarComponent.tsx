@@ -126,7 +126,7 @@ router.push(url)
             <Button
               variant="text"
               onClick={() => {
-                handleClick("/home/home");
+                handleClick("/home");
               }}>
               <Image
                 src={ebotifylogo.src}

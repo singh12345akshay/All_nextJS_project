@@ -1,25 +1,33 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import Script from 'next/script';
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { estateBot } from 'src/assets';
 import botDetail from "../../assets/botDetail.json"
 
 interface Iprops{
-    name:string
+    id:string
 }
 
 interface Ibot{
     id:string
+    type:string
     imagesrc:string
     botscript:string
 }
 export default function BotPageComponent(props:Iprops) {
-    const {name}=props
+    const {id}=props
     const theme = useTheme();
     const {bots}= botDetail
-    const key = name;
+    const key = id;
     const [bot,setBot]=useState<Ibot>()
+  const [botName, setBotName] = useState("")
+
+  useEffect(()=>{const storageData=localStorage.getItem("botList")
+    if(storageData){
+      const botList = JSON.parse(storageData)
+      const desiredObj=botList.find((obj:any)=> obj._id===key)
+      if(desiredObj)
+      {setBotName(desiredObj.name)}
+    }},[])
     
     useEffect(() => {
       const obj = bots.find((obj: Ibot) => obj.id === key);
@@ -44,7 +52,7 @@ export default function BotPageComponent(props:Iprops) {
 
   return (
     <>
-      <Typography variant="h6" align="center">{name}</Typography>
+      <Typography variant="h6" align="center">{botName}</Typography>
       {bot && (
         <Box
           sx={{

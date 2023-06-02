@@ -12,12 +12,7 @@ export default function AuthProvider({ children }: AuthproviderProps) {
 
   const checkAuthtoken = async () => {
     const currentPage = router.pathname;
-
     const authToken = localStorage.getItem("authToken");
-
-    {
-      console.log("i'm here:", currentPage);
-    }
 
     if (!authToken && currentPage !== "/signin") {
       {
@@ -33,7 +28,7 @@ export default function AuthProvider({ children }: AuthproviderProps) {
         },
       });
     } else if (authToken && currentPage === "/signin") {
-      router.push("/home/home");
+      router.push("/home");
     }
   };
   useEffect(() => {

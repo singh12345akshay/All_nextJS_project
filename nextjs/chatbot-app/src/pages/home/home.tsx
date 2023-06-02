@@ -3,13 +3,17 @@ import Image from "next/image";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { cardlogo } from "../../assets/images";
+import { styled, alpha } from '@mui/material/styles';
 import { Card, CardActionArea, CardContent, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import InputBase from '@mui/material/InputBase';
+import Head from "next/head"; 
 import Link from "next/link";
 import axios from "axios";
-import FuzzySearch from 'fuzzy-search';
+import SearchIcon from '@mui/icons-material/Search';
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
+import { useDispatch } from 'react-redux';
+import { setData } from '../../store/store';
 
 export interface Idata {
   _id: string;
@@ -18,12 +22,54 @@ export interface Idata {
 
 export type apiResponse = Idata[];
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
 
 export default function Home() {
   const [bot, setBot] = useState<apiResponse>([]);
   const router = useRouter();
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     const storedData = localStorage.getItem("authToken");
@@ -42,8 +88,11 @@ export default function Home() {
           }
         );
 
-        const data: apiResponse = response.data.body;
+        const data = response.data.body;
+       
         setBot(data);
+         localStorage.setItem("botList", JSON.stringify(data));
+        dispatch(setData(data));
       } catch (error) {
         console.error(error);
       }
@@ -72,6 +121,7 @@ export default function Home() {
     }
   };
   const itemsToRender = searchText.trim() === '' ? bot : searchResults;
+   console.log(bot)
   return (
     <>
       <Head>
@@ -81,7 +131,9 @@ export default function Home() {
       </Head>
       <SideBarComponent>
         <>
-          <Box>
+          <Box >
+            <Box sx={{ display: "flex", marginBottom: '20px', alignItems: "center" ,justifyContent: "flex-end"}}>
+               <Box sx={{ marginRight: "auto",marginLeft:"50%"}}>
             <Typography
               gutterBottom
               variant="h6"
@@ -89,16 +141,23 @@ export default function Home() {
               align="center"
               style={{
                 fontWeight: 700,
+               
               }}>
               BOT
             </Typography>
-            <TextField
-              label="Search"
-              value={searchText}
-              onChange={handleSearch}
-              fullWidth
-              sx={{ marginBottom: '20px' }}
+             </Box>
+            <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+            value={searchText}
+            onChange={handleSearch}
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
             />
+          </Search>
+            </Box>
             <Box
               style={{
                 margin: "5px",
@@ -108,7 +167,7 @@ export default function Home() {
                   return (
                     // <Link href={`/bot/${bot.name.toLowerCase()}`} as={`/${bot.id}}`} key={bot._id}>
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                      <Link href={`/bot/${index + 1}`}>
+                      <Link href={`/bot/${bot._id}`}>
                         <Card
                           sx={{ maxWidth: 380 }}
                         // onClick={()=>{handleClick(bot.name)}}
