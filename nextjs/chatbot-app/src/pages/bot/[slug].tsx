@@ -42,7 +42,7 @@ const {bots}=botDetail
  else if(botType==='facebookBot'){
   return (
     <>
-      <SideBarComponent>
+      <SideBarComponent >
         <FacebookBot id={slug} />
       </SideBarComponent>
     </>

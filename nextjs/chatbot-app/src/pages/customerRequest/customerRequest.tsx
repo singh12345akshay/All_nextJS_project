@@ -261,7 +261,7 @@ const handleAdd=()=>{
 
 const autoPageChange=async ()=>{
   if(data.length){
-    if(data.length % rowsPerPage-1===0 & page>=1){
+    if(data.length % rowsPerPage-1===0 && page>=1){
       setPage(page-1)
     }
   }
