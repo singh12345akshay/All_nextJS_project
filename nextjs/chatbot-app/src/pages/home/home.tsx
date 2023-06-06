@@ -25,7 +25,9 @@ export type apiResponse = Idata[];
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: "white",
+  boxShadow: " 0 2px 4px rgba(0, 0, 0, 0.2)",
+  borderRadius:"4px",
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
@@ -110,8 +112,7 @@ export default function Home() {
     setSearchText(value);
 
     if (value.trim() === '') {
-      setSearchResults(bot);
-      console.log("bot",bot)// Reset search results to original data
+      setSearchResults(bot);// Reset search results to original data
     } else {
       const filteredResults = bot.filter((item) =>
         item.name.toLowerCase().includes(value.toLowerCase())
@@ -121,7 +122,6 @@ export default function Home() {
     }
   };
   const itemsToRender = searchText.trim() === '' ? bot : searchResults;
-   console.log(bot)
   return (
     <>
       <Head>
@@ -146,7 +146,7 @@ export default function Home() {
               BOT
             </Typography>
              </Box>
-            <Search>
+            <Search >
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -158,21 +158,28 @@ export default function Home() {
             />
           </Search>
             </Box>
-            <Box
-              style={{
-                margin: "5px",
-              }}>
+            <Box>
               <Grid container spacing={3}>
                 {itemsToRender.map((bot, index) => {
                   return (
-                    // <Link href={`/bot/${bot.name.toLowerCase()}`} as={`/${bot.id}}`} key={bot._id}>
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                      <Link href={`/bot/${bot._id}`}>
-                        <Card
-                          sx={{ maxWidth: 380 }}
-                        // onClick={()=>{handleClick(bot.name)}}
-                        >
+                      <Link href={`/bot/${bot._id}`} style={{textDecoration:"none"}}>
+                        <Card >
                           <CardActionArea>
+                            
+                            <Box
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                paddingTop: "24px",
+                              }}>
+                              <Image
+                                src={cardlogo.src}
+                                alt={"Card Logo"}
+                                width={cardlogo.width}
+                                height={cardlogo.height}></Image>
+                            </Box>
                             <CardContent>
                               <Typography
                                 gutterBottom
@@ -182,28 +189,15 @@ export default function Home() {
                                 style={{
                                   fontSize: 18,
                                   fontWeight: 700,
-                                  textOverflow: "ellipsis",
                                   whiteSpace: "nowrap",
                                   display: "-webkit-box",
                                   WebkitLineClamp: 2,
                                   WebkitBoxOrient: "vertical",
+                                  textOverflow: "ellipsis",
                                 }}>
                                 {bot.name}
                               </Typography>
                             </CardContent>
-                            <Box
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                paddingBottom: "15px",
-                              }}>
-                              <Image
-                                src={cardlogo.src}
-                                alt={"Card Logo"}
-                                width={cardlogo.width}
-                                height={cardlogo.height}></Image>
-                            </Box>
                           </CardActionArea>
                         </Card>
                       </Link>

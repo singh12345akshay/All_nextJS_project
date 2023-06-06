@@ -1,7 +1,8 @@
-import { Typography, Box, useTheme } from '@mui/material';
+import { Typography, Box, useTheme ,Button} from '@mui/material';
 import Image from "next/image";
+import { useRef } from 'react';
 import React, { RefAttributes, useEffect, useState } from 'react';
-import { FacebookProvider, CustomChat } from 'react-facebook';
+import { FacebookProvider,MessengerCustomerChat, Page ,CustomChat} from 'react-facebook';
 import botDetail from "../../assets/botDetail.json"
 
 interface Iprops{
@@ -40,7 +41,15 @@ export default function FacebookBot(props:Iprops) {
 //   };
   return (
       <>
-        <Typography variant="h6" align="center">{botName}</Typography>
+         <Typography variant="h6" align="center" gutterBottom style={{
+                                  fontSize: 18,
+                                  fontWeight: 700,
+                                  whiteSpace: "nowrap",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                  textOverflow: "ellipsis",
+                                }}>{botName}</Typography>
       {bot && (
         <Box
           sx={{
@@ -56,10 +65,10 @@ export default function FacebookBot(props:Iprops) {
                         appId="881543989662726"
                         htmlRef="https://chatbotapps.mindpath.tech/login"
                     /> */}
-           <FacebookProvider appId="881543989662726">
-        <CustomChat pageId="101859349483453"  />
+           <FacebookProvider appId="3661120750634145">
+        <CustomChat pageId="114508394010707" minimized={false} />
       </FacebookProvider>
-      <div id="chatbot"></div>
+      {/* <div id="chatbot"></div> */}
       
     </>
   )

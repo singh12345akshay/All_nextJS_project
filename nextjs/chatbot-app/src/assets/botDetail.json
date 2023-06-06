@@ -160,7 +160,7 @@
       {
         "id": "60a8e4fd6ecda7cb05c04818",
         "type": "whatsappBot",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/chatbot.gif",
         "botscript": "https://api.whatsapp.com/send?phone=447785948933&text=@join@%20sigma-bot"
       },
       {
@@ -208,13 +208,13 @@
       {
         "id": "60ec2f534895cb37bc42667a",
         "type": "whatsappBot",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/chatbot.gif",
         "botscript": "https://api.whatsapp.com/send?phone=447785948933&text=@join@%20meraqui"
       },
       {
         "id": "60ec2f874895cb37bc4272d9",
         "type": "telegramBot",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "/images/chatbot.gif",
         "botscript": "https://t.me/DrFixitBot"
       },
       {

@@ -52,7 +52,15 @@ export default function BotPageComponent(props:Iprops) {
 
   return (
     <>
-      <Typography variant="h6" align="center">{botName}</Typography>
+      <Typography variant="h6" align="center" gutterBottom style={{
+                                  fontSize: 18,
+                                  fontWeight: 700,
+                                  whiteSpace: "nowrap",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                  textOverflow: "ellipsis",
+                                }}>{botName}</Typography>
       {bot && (
         <Box
           sx={{

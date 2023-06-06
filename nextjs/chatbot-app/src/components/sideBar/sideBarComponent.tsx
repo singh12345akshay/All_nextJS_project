@@ -26,7 +26,7 @@ interface SideBarComponentProps {
 const Main = styled("main")(({ theme }) => ({
   padding: theme.spacing(2),
   marginLeft: 0,
-  backgroundColor: "#f5f6f9",
+  backgroundColor: "#f1f1f1",
   minHeight: `calc(100vh - ${theme.spacing(12)})`,
   height: "auto",
   marginTop: theme.spacing(8),

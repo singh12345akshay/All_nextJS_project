@@ -6,29 +6,29 @@ export const LoginCard = styled(Card)(({ theme }) => ({
   padding: theme.spacing(4, 4),
   borderRadius: "8px",
   boxShadow: theme.shadows[1],
-  top: "50%",
-  left: "50%",
-  position: "absolute",
-  transform: "translate(-50%, -50%)",
+  // position:"relative",
+  // position: "absolute",
+  // transform: "translate(-50%, -50%)",
   [theme.breakpoints.down("lg")]: {
-    width: "430px",
+    width: "500px",
   },
   [theme.breakpoints.down("md")]: {
-    position: "absolute",
-    transform: "translate(-50%, -50%)",
-    top: "50%",
-    left: "50%",
-    margin: theme.spacing(1),
-    width: "500px",
+    width: "430px",
     minheight: "67%",
   },
   [theme.breakpoints.down("sm")]: {
-    position: "absolute",
-    transform: "translate(-50%, -50%)",
-    top: "50%",
-    left: "50%",
-    margin: theme.spacing(0),
-    width: "95%",
+     width: "430px",
+  },
+}));
+export const LoginPageWrapper = styled(Box)(({ theme }) => ({
+  height:"100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItem: "center",
+  overflow: "hidden",
+  [theme.breakpoints.down("md")]: {
+  },
+  [theme.breakpoints.down("sm")]: {
   },
 }));
 export const CustomSignInButton = styled(Button)(({ theme }) => ({
