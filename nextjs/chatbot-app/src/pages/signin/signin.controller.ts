@@ -7,6 +7,7 @@ import { useSnackbar } from "notistack";
 
 
 export default function SigninController() {
+  const [isClicked, setIsClicked] = useState(false);
     const [email, setEmail] = useState({
         value: "",
         isValid: true,
@@ -36,6 +37,10 @@ const { enqueueSnackbar } = useSnackbar();
           setEmailHelpertext("Email should be in format user@example.com");
         }
       }
+
+      const handleTextFieldClick = () => {
+    setIsClicked(true);
+  };
 
       const handleSubmit = async (e: { preventDefault: () => void; }) => {
         try {
@@ -89,11 +94,12 @@ const { enqueueSnackbar } = useSnackbar();
       }
 
   return ({
-    getters:{email, password, emailHelpertext, passwordHelpertext},
+    getters:{email, password, emailHelpertext, passwordHelpertext,isClicked},
     handlers:{
         validateEmail,
         handleSubmit,
         validatePassword,
+        handleTextFieldClick
     }
   }
   );

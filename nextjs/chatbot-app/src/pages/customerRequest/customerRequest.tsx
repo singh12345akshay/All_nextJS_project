@@ -266,11 +266,13 @@ const autoPageChange=async ()=>{
     }
   }
 }
-    const addRequest = async (data) => {
+  const addRequest = async (data) => {
+      
       const payload = {
         description: data.description,
         status: data.status,
       };
+      console.log(payload)
       const storedData = localStorage.getItem("authToken");
       if (storedData) {
         const authToken = JSON.parse(storedData);
@@ -286,7 +288,6 @@ const autoPageChange=async ()=>{
             body: JSON.stringify(payload),
           }
         );
-        console.log(response);
         if (response.ok) {
           fetchData();
           enqueueSnackbar("Request Added successfully !!", {
@@ -392,7 +393,6 @@ const autoPageChange=async ()=>{
             body: JSON.stringify(payload),
           }
         );
-        console.log(response);
         if (response.ok) {
           await fetchData();
           enqueueSnackbar("Deleted successfully ", {

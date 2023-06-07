@@ -1,16 +1,13 @@
 import React from "react";
 import Head from "next/head";
 import Image from "next/image";
-import {
-   Box,
-
-  TextField
-} from "@mui/material";
+import {Box} from "@mui/material";
 import {
   LoginCard,
   LoginLogoWraper,
   LoginPageWrapper,
   BotImage,
+  CustomTextField,
   CustomSignInButton,
 } from "./signin.style";
 import SigninController from "./signin.controller";
@@ -19,6 +16,7 @@ import {
   mindpathIcon,
   SignInBg2,
   signupPic,
+  login
 } from "../../assets/images";
 
 export default function Signin() {
@@ -33,29 +31,28 @@ export default function Signin() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Box>
+          <Box sx={{transform: "scaleX(-1)"}} >
           <Image
             src={SignInBg2.src}
             alt={"background image"}
+            layout="intrinsic"
             width={SignInBg2.width}
             height={SignInBg2.height}
+            
           />
+          </Box>
           <BotImage>
             <Image
-              src={signupPic.src}
+              src={login.src}
               alt={"background image"}
-              width={280}
-              height={323}
+              width={550}
+              height={550}
+              layout="responsive"
             />
           </BotImage>
-          <Box>
             <LoginCard>
               <LoginLogoWraper>
-                <Image
-                  src={mindpathIcon.src}
-                  alt={"Company image"}
-                  width={77}
-                  height={73}
-                />
+              
                 <Image
                   src={logoColored.src}
                   alt={"Company image"}
@@ -63,26 +60,23 @@ export default function Signin() {
                   height={54}
                 />
               </LoginLogoWraper>
-                <Box>
-                  <TextField
-                    sx={(theme) => ({
-                      margin: theme.spacing(0.6),
-                    })}
+            <Box  sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+                  <CustomTextField
+                    
                     id="email"
                     label="Email"
                     variant="standard"
-                    fullWidth
+                    
                     onChange={handlers.validateEmail}
                     value={getters.email.value}
                     error={!getters.email.isValid}
                     helperText={getters.emailHelpertext}
                   />
-                </Box>
-                <Box>
-                  <TextField
-                    sx={(theme) => ({
-                      margin: theme.spacing(0.6),
-                    })}
+                  <CustomTextField
                     id="password"
                     label="Password"
                     type="password"
@@ -109,17 +103,7 @@ export default function Signin() {
                     Sign In
                   </CustomSignInButton>
               </Box>
-              {/* <Box><Snackbar
-  open={Boolean(snackbarData.message)}
-  autoHideDuration={3000}
-  onClose={() => setSnackbarData({ message: '', severity: 'success' })}
->
-  <Alert onClose={() => setSnackbarData({ message: '', severity: 'success' })} severity={snackbarData.severity}>
-    {snackbarData.message}
-  </Alert>
-</Snackbar></Box> */}
             </LoginCard>
-          </Box>
         </Box>
       </LoginPageWrapper>
     </>

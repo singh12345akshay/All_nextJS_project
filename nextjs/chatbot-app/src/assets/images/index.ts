@@ -13,3 +13,4 @@ export { default as webBot } from './webBot.png';
 export {default as whatsapp} from './whatsapp.png';
 export { default as facebook } from "./facebook.png";
 export { default as telegram } from "./telegram.png";
+export { default as login } from "./login.png";

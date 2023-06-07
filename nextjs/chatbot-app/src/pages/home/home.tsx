@@ -164,7 +164,13 @@ export default function Home() {
                   return (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                       <Link href={`/bot/${bot._id}`} style={{textDecoration:"none"}}>
-                        <Card >
+                        <Card sx={{
+                          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+        ':hover': {
+          transform: 'translateY(-6px)',
+          boxShadow: '0 12px 16px rgba(0, 0, 0, 0.2)',
+        },}}>
                           <CardActionArea>
                             
                             <Box
@@ -172,7 +178,7 @@ export default function Home() {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                paddingTop: "24px",
+                                paddingTop: "32px",
                               }}>
                               <Image
                                 src={cardlogo.src}
