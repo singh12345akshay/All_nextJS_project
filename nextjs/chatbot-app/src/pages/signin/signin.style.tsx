@@ -17,33 +17,24 @@ export const LoginPageWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const LoginCard = styled(Card)(({ theme }) => ({
-  margin: "auto",
   width: "480px",
   padding: theme.spacing(4),
-  borderRadius: "8px",
+  borderRadius: theme.spacing(1),
   boxShadow: "0 3px 16px #32353d",
-  // boxShadow: theme.shadows[1],
   top: "50%",
   left: "25%",
   position: "absolute",
   transform: "translate(-50%, -50%)",
   
-  // [theme.breakpoints.down("lg")]: {
-  //   width: "480px",
-  // },
-  // [theme.breakpoints.down("md")]: {
-    
-  //   margin: theme.spacing(1),
-  //   width: "480px",
-  // },
-  // [theme.breakpoints.down("sm")]: {
-  //   position: "absolute",
-  //   transform: "translate(-50%, -50%)",
-  //   top: "50%",
-  //   left: "50%",
-  //   margin: theme.spacing(0),
-  //   width: "480px",
-  // },
+  [theme.breakpoints.down("lg")]: {
+     left:"50%"
+  },
+  [theme.breakpoints.down("md")]: {
+    left:"50%"
+  },
+  [theme.breakpoints.down("sm")]: {
+left:"50%"
+  },
 }));
 
 export const LoginLogoWraper = styled(Box)(({ theme }) => ({
@@ -54,11 +45,24 @@ export const LoginLogoWraper = styled(Box)(({ theme }) => ({
 }));
 
 export const BotImage = styled(Box)(({ theme }) => ({
-  img: {
-    maxWidth:"550px",
     position: "absolute",
-    right: "50px",
-    bottom: "24%",
+    right: "5%",
+    bottom: "50%",
+    transform:"translate(0,48%)",
+    width:"520px",
+    height:"520px",
+  [theme.breakpoints.down(1450)]: {
+    width:"450px",
+    height:"450px"
+  },
+  [theme.breakpoints.down("lg")]: {
+    width:"0"
+  },
+  [theme.breakpoints.down("md")]: {
+    width:"0"
+  },
+  [theme.breakpoints.down("sm")]: {
+width:"0"
   },
 }));
 
