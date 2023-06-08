@@ -2,6 +2,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import botDetail from "../../assets/botDetail.json"
+import { image1, image2, image3, image4, image5, image6 } from "src/assets/bgImages";
 
 interface Iprops{
     id:string
@@ -20,6 +21,25 @@ export default function BotPageComponent(props:Iprops) {
     const key = id;
     const [bot,setBot]=useState<Ibot>()
   const [botName, setBotName] = useState("")
+   const [backgroundImage, setBackgroundImage] = useState('');
+
+  function getRandomImage() {
+  const images = [
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6
+    // Add more image file names as needed
+  ];
+  const randomIndex = Math.floor(Math.random() * images.length);
+  return images[randomIndex];
+  }
+  // useEffect(() => {
+  //   const randomImage = getRandomImage();
+  //   setBackgroundImage(randomImage);
+  // }, []);
 
   useEffect(()=>{const storageData=localStorage.getItem("botList")
     if(storageData){
@@ -38,7 +58,7 @@ export default function BotPageComponent(props:Iprops) {
     if (bot) {
       window.initPayload = "hi";
       window.metadata = {};
-      const script = document.createElement("script");
+            const script = document.createElement("script");
       script.src = bot.botscript;
       script.async = true;
       document.body.appendChild(script);
@@ -52,8 +72,9 @@ export default function BotPageComponent(props:Iprops) {
 
   return (
     <>
-      <Typography variant="h6" align="center" gutterBottom style={{
-                                  fontSize: 18,
+      <Typography variant="h6" align="center"  style={{
+        marginBottom:'4px',
+                                  fontSize: 20,
                                   fontWeight: 700,
                                   whiteSpace: "nowrap",
                                   display: "-webkit-box",
@@ -66,9 +87,9 @@ export default function BotPageComponent(props:Iprops) {
           sx={{
             position: "relative",
             width: "auto",
-            height: `calc(100vh - ${theme.spacing(16)})`,
+            height: `calc(100vh - ${theme.spacing(16.5)})`,
           }}>
-          <Image src={bot.imagesrc} alt="image" fill={true} />
+          <Image src={(bot.imagesrc===''?getRandomImage():bot.imagesrc)} alt="image" fill={true} />
         </Box>
       )}
       <div id="chatbot"></div>

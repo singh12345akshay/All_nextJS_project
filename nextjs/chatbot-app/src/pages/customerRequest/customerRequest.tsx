@@ -472,7 +472,7 @@ const autoPageChange=async ()=>{
         <div>
           <Box sx={{
             textAlign: "right",
-            marginBottom: "8px",
+            marginBottom: "16px",
           }}>
             <Button
               startIcon={<AddIcon />}
@@ -494,9 +494,9 @@ const autoPageChange=async ()=>{
             </Button>
           </Box>
           <Box>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} style={{ maxHeight: 'calc(100vh - 175px)', overflow: 'auto' , minWidth:"930px"}}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
+                <TableHead style={{position:"sticky",top:"0",zIndex:100}}>
                   <TableRow sx={{ backgroundColor: "#242A38", color: "white" }}>
                     <StyledTableCell>Request ID</StyledTableCell>
                     <StyledTableCell>Description</StyledTableCell>
@@ -529,7 +529,7 @@ const autoPageChange=async ()=>{
         </TableRow>
                   
                 ) : (<>
-                  <TableBody>
+                  <TableBody >
                   {(rowsPerPage > 0
             ?data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
@@ -572,7 +572,7 @@ const autoPageChange=async ()=>{
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter>
+                <TableFooter style={{position:"sticky",bottom:"0",zIndex:100}}>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
@@ -613,7 +613,7 @@ borderRadius:"5px",
               }}
             />
           </TableRow>
-        </TableFooter></>
+        </TableFooter ></>
                 )}
                 
               </Table>

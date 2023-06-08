@@ -1,127 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {  } from "react";
 import Image from "next/image";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { cardlogo } from "../../assets/images";
-import { styled, alpha } from '@mui/material/styles';
-import { Card, CardActionArea, CardContent, Grid, TextField } from "@mui/material";
-import { useRouter } from "next/router";
-import InputBase from '@mui/material/InputBase';
 import Head from "next/head"; 
 import Link from "next/link";
-import axios from "axios";
+
+import Typography from "@mui/material/Typography";
+import {Box, CardActionArea, CardContent, Grid,Skeleton } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import SideBarComponent from "src/components/sideBar/sideBarComponent";
-import { useDispatch } from 'react-redux';
-import { setData } from '../../store/store';
 
-export interface Idata {
-  _id: string;
-  name: string;
-}
+import { cardlogo } from "../../assets/images";
+import SideBarComponent from "../../components/sideBar/sideBarComponent";
 
-export type apiResponse = Idata[];
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "white",
-  boxShadow: " 0 2px 4px rgba(0, 0, 0, 0.2)",
-  borderRadius:"4px",
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
+import HomeController from "./home.controller";
+import { BotCard, BotCardLogo, BotCardTitle, HeaderTitle, PageHeader, Search ,SearchIconWrapper,StyledInputBase} from "./home.style";
 
 export default function Home() {
-  const [bot, setBot] = useState<apiResponse>([]);
-  const router = useRouter();
-  const [searchText, setSearchText] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const dispatch = useDispatch();
-
-  const fetchData = async () => {
-    const storedData = localStorage.getItem("authToken");
-
-    if (storedData) {
-      const authToken = JSON.parse(storedData);
-      
-      try {
-        // Make a GET request to the API endpoint
-        const response = await axios.get(
-          "https://chatbotapps.mindpath.tech/api/v1/user/bots",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        const data = response.data.body;
-       
-        setBot(data);
-         localStorage.setItem("botList", JSON.stringify(data));
-        dispatch(setData(data));
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-  useEffect(() => {
-    // Define a function to fetch the data from the API
-
-    fetchData();
-  }, []);
-  {
-  }
-  const handleSearch = (event) => {
-    const { value } = event.target;
-    setSearchText(value);
-
-    if (value.trim() === '') {
-      setSearchResults(bot);// Reset search results to original data
-    } else {
-      const filteredResults = bot.filter((item) =>
-        item.name.toLowerCase().includes(value.toLowerCase())
-      );
-      console.log("filteredResults", filteredResults);
-      setSearchResults(filteredResults);
-    }
-  };
+  const { getters, handlers } = HomeController();
+  const {bot,loading, searchText, searchResults}=getters;
+  const { fetchData,handleSearch } = handlers;
   const itemsToRender = searchText.trim() === '' ? bot : searchResults;
+  const placeholderData = Array.from({ length: 12 }, (_, index) => index);
   return (
     <>
       <Head>
@@ -131,21 +28,19 @@ export default function Home() {
       </Head>
       <SideBarComponent>
         <>
-          <Box >
-            <Box sx={{ display: "flex", marginBottom: '20px', alignItems: "center" ,justifyContent: "flex-end"}}>
-               <Box sx={{ marginRight: "auto",marginLeft:"50%"}}>
+            <PageHeader >
+               <HeaderTitle >
             <Typography
               gutterBottom
               variant="h6"
               component="div"
               align="center"
               style={{
-                fontWeight: 700,
-               
+                fontWeight: 700
               }}>
               BOT
             </Typography>
-             </Box>
+             </HeaderTitle>
             <Search >
             <SearchIconWrapper>
               <SearchIcon />
@@ -157,62 +52,49 @@ export default function Home() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-            </Box>
+            </PageHeader>
             <Box>
               <Grid container spacing={3}>
-                {itemsToRender.map((bot, index) => {
+                {loading? placeholderData.map((index) => {
+                  return(
+                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                       <BotCard key={index}>
+            <CardContent>
+              <Skeleton align="center" variant="circular" width={85} height={85}/>
+              <Skeleton variant="text" width={295} height={30} />
+            </CardContent>
+          </BotCard>
+                      </Grid>
+                  )
+        }):itemsToRender.map((bot, index) => {
                   return (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                       <Link href={`/bot/${bot._id}`} style={{textDecoration:"none"}}>
-                        <Card sx={{
-                          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-        ':hover': {
-          transform: 'translateY(-6px)',
-          boxShadow: '0 12px 16px rgba(0, 0, 0, 0.2)',
-        },}}>
+                        <BotCard>
                           <CardActionArea>
-                            
-                            <Box
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                paddingTop: "32px",
-                              }}>
+                            <BotCardLogo>
                               <Image
                                 src={cardlogo.src}
                                 alt={"Card Logo"}
                                 width={cardlogo.width}
-                                height={cardlogo.height}></Image>
-                            </Box>
+                                height={cardlogo.height}/>
+                            </BotCardLogo>
                             <CardContent>
-                              <Typography
+                              <BotCardTitle
                                 gutterBottom
                                 variant="h6"
-                                component="div"
-                                align="center"
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 700,
-                                  whiteSpace: "nowrap",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: "vertical",
-                                  textOverflow: "ellipsis",
-                                }}>
+                                align="center">
                                 {bot.name}
-                              </Typography>
+                              </BotCardTitle>
                             </CardContent>
                           </CardActionArea>
-                        </Card>
+                        </BotCard>
                       </Link>
                     </Grid>
                   );
                 })}
               </Grid>
             </Box>
-          </Box>
         </>
       </SideBarComponent>
     </>

@@ -34,10 +34,25 @@ const { enqueueSnackbar } = useSnackbar();
             value: e.target.value,
             isValid: false,
           });
-          setEmailHelpertext("Email should be in format user@example.com");
+          setEmailHelpertext("This field is required");
         }
       }
-
+      
+      function validatePassword(e: { target: { value: string } }) {
+        if (RegexLibrary.PASSWORD.test(e.target.value)) {
+          setPassword({
+            value: e.target.value,
+            isValid: true,
+          });
+          setpasswordHelpertext("");
+        } else {
+          setPassword({
+            value: e.target.value,
+            isValid: false,
+          });
+          setpasswordHelpertext("This field is required");
+        }
+      }
       const handleTextFieldClick = () => {
     setIsClicked(true);
   };
@@ -77,21 +92,6 @@ const { enqueueSnackbar } = useSnackbar();
         }
       };
       
-      function validatePassword(e: { target: { value: string } }) {
-        if (RegexLibrary.PASSWORD.test(e.target.value)) {
-          setPassword({
-            value: e.target.value,
-            isValid: true,
-          });
-          setpasswordHelpertext("");
-        } else {
-          setPassword({
-            value: e.target.value,
-            isValid: false,
-          });
-          setpasswordHelpertext("Password should contain [0,9] [a-z] [A-Z] ");
-        }
-      }
 
   return ({
     getters:{email, password, emailHelpertext, passwordHelpertext,isClicked},

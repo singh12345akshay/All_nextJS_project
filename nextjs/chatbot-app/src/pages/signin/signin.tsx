@@ -1,7 +1,16 @@
 import React from "react";
 import Head from "next/head";
 import Image from "next/image";
+
 import {Box} from "@mui/material";
+
+import {
+  ebotifyLogo,
+  backgroundImage,
+  login
+} from "../../assets/images";
+
+import SigninController from "./signin.controller";
 import {
   LoginCard,
   LoginLogoWraper,
@@ -9,18 +18,16 @@ import {
   BotImage,
   CustomTextField,
   CustomSignInButton,
+  BackgroundImage
 } from "./signin.style";
-import SigninController from "./signin.controller";
-import {
-  logoColored,
-  SignInBg2,
-  signupPic,
-  login
-} from "../../assets/images";
 
 export default function Signin() {
   const { getters, handlers } = SigninController();
-
+  const { email, password, emailHelpertext, passwordHelpertext, isClicked } = getters;
+  const { validateEmail,
+    handleSubmit,
+    validatePassword,
+    handleTextFieldClick } = handlers;
   return (
     <>
       <LoginPageWrapper >
@@ -30,33 +37,24 @@ export default function Signin() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Box >
-          
-          <Box sx={{transform: "scaleX(-1)",position:"absolute",left:"0",height:"100vh",width:"100vw"}} >
+          <BackgroundImage >
           <Image
-            src={SignInBg2.src}
+            src={backgroundImage.src}
             alt={"background image"}
-                      fill={true}
-            // width={SignInBg2.width}
-            // height={SignInBg2.height}
-            
+            fill={true}
           />
-          </Box>
+          </BackgroundImage>
           <BotImage>
             <Image
               src={login.src}
               alt={"background image"}
               fill={true}
-              // object-fit="cover"
-              // width={520}
-              // height={520}
-    
             />
           </BotImage>
             <LoginCard>
               <LoginLogoWraper>
-              
                 <Image
-                  src={logoColored.src}
+                  src={ebotifyLogo.src}
                   alt={"Company image"}
                   width={133}
                   height={54}
@@ -73,10 +71,10 @@ export default function Signin() {
                     label="Email"
                     variant="standard"
                     
-                    onChange={handlers.validateEmail}
-                    value={getters.email.value}
-                    error={!getters.email.isValid}
-                    helperText={getters.emailHelpertext}
+                    onChange={validateEmail}
+                    value={email.value}
+                    error={!email.isValid}
+                    helperText={emailHelpertext}
                   />
                   <CustomTextField
                     id="password"
@@ -85,19 +83,19 @@ export default function Signin() {
                     autoComplete="current-password"
                     variant="standard"
                     fullWidth
-                    onChange={handlers.validatePassword}
-                    value={getters.password.value}
-                    error={!getters.password.isValid}
-                    helperText={getters.passwordHelpertext}
+                    onChange={validatePassword}
+                    value={password.value}
+                    error={!password.isValid}
+                    helperText={passwordHelpertext}
                   />
                 </Box>
                 <Box>
                   <CustomSignInButton
                     variant="contained"
                     type="submit"
-                    onClick={handlers.handleSubmit}
+                    onClick={handleSubmit}
                     disabled={
-                      getters.email.isValid && getters.password.isValid
+                      email.isValid && password.isValid
                         ? false
                         : true
                     }

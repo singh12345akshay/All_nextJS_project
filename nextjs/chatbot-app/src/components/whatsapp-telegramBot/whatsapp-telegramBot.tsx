@@ -42,7 +42,8 @@ export default function WhatsappTelegramBot(props:Iprops) {
   return (
     <>
       <Typography variant="h6" align="center" gutterBottom style={{
-                                  fontSize: 18,
+                                  marginBottom:'4px',
+                                  fontSize: 20,
                                   fontWeight: 700,
                                   whiteSpace: "nowrap",
                                   display: "-webkit-box",
@@ -55,7 +56,7 @@ export default function WhatsappTelegramBot(props:Iprops) {
           sx={{
             position: "relative",
             width: "auto",
-            height: `calc(100vh - ${theme.spacing(16)})`,
+            height: `calc(100vh - ${theme.spacing(16.5)})`,
           }}>
           <Image src={bot.imagesrc} alt="image" fill={true} />
           <Button

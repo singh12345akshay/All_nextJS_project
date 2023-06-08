@@ -25,7 +25,7 @@ export class RegexLibrary {
     /** Deny Instanciation of this Class */
     constructor() {
       throw new Error(
-        'Cannot instanciate this Class, please use only for static members',
+        'Cannot instantiate this Class, please use only for static members',
       );
     }
   }

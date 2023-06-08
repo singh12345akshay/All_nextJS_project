@@ -16,8 +16,32 @@ export const LoginPageWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
+export const BackgroundImage=styled(Box)(({theme})=>({transform: "scaleX(-1)",position:"absolute",left:"0",height:"100vh",width:"100vw"}))
+
+export const BotImage = styled(Box)(({ theme }) => ({
+    position: "absolute",
+    right: "5%",
+    bottom: "50%",
+    transform:"translate(0,48%)",
+    width:theme.spacing(65),
+    height:theme.spacing(65),
+  [theme.breakpoints.down(1450)]: {
+    width:theme.spacing(56),
+    height:theme.spacing(56)
+  },
+  [theme.breakpoints.down("lg")]: {
+    width:theme.spacing(0)
+  },
+  [theme.breakpoints.down("md")]: {
+    width:theme.spacing(0)
+  },
+  [theme.breakpoints.down("sm")]: {
+width:theme.spacing(0)
+  },
+}));
+
 export const LoginCard = styled(Card)(({ theme }) => ({
-  width: "480px",
+  width: theme.spacing(60),
   padding: theme.spacing(4),
   borderRadius: theme.spacing(1),
   boxShadow: "0 3px 16px #32353d",
@@ -44,28 +68,6 @@ export const LoginLogoWraper = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(4),
 }));
 
-export const BotImage = styled(Box)(({ theme }) => ({
-    position: "absolute",
-    right: "5%",
-    bottom: "50%",
-    transform:"translate(0,48%)",
-    width:"520px",
-    height:"520px",
-  [theme.breakpoints.down(1450)]: {
-    width:"450px",
-    height:"450px"
-  },
-  [theme.breakpoints.down("lg")]: {
-    width:"0"
-  },
-  [theme.breakpoints.down("md")]: {
-    width:"0"
-  },
-  [theme.breakpoints.down("sm")]: {
-width:"0"
-  },
-}));
-
 export const CustomSignInButton = styled(Button)(({ theme }) => ({
   position: "relative",
   margin: "1rem auto 0",
@@ -84,7 +86,7 @@ export const CustomSignInButton = styled(Button)(({ theme }) => ({
 }));
 
 export const CustomTextField = styled(TextField)(({ theme }) => ({
-  width: '416px',
+  width: theme.spacing(52),
   margin: theme.spacing(1.5),
                  
 }));
