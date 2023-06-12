@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import {Box, CardActionArea, CardContent, Grid,Skeleton } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
-import { cardlogo } from "../../assets/images";
+import { cardlogo, searchResult,searchgif,search } from "../../assets/images";
 import SideBarComponent from "../../components/sideBar/sideBarComponent";
 
 import HomeController from "./home.controller";
@@ -18,7 +18,7 @@ export default function Home() {
   const {bot,loading, searchText, searchResults}=getters;
   const { fetchData,handleSearch } = handlers;
   const itemsToRender = searchText.trim() === '' ? bot : searchResults;
-  const placeholderData = Array.from({ length: 12 }, (_, index) => index);
+  const placeholderData = Array.from({ length: 24 }, (_, index) => index);
   return (
     <>
       <Head>
@@ -38,7 +38,7 @@ export default function Home() {
               style={{
                 fontWeight: 700
               }}>
-              BOT
+              BOTS
             </Typography>
              </HeaderTitle>
             <Search >
@@ -59,14 +59,20 @@ export default function Home() {
                   return(
                      <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                        <BotCard key={index}>
-            <CardContent>
-              <Skeleton align="center" variant="circular" width={85} height={85}/>
-              <Skeleton variant="text" width={295} height={30} />
+                        
+                          <BotCardLogo>
+              <Skeleton variant="circular" animation="wave" width={85} height={85}/>
+                        </BotCardLogo>
+                        <CardContent>
+              <BotCardTitle gutterBottom
+                                align="center">
+              <Skeleton variant="text" animation="wave" width={340} height={35} />
+              </BotCardTitle>
             </CardContent>
           </BotCard>
                       </Grid>
                   )
-        }):itemsToRender.map((bot, index) => {
+        }):itemsToRender.length?itemsToRender.map((bot, index) => {
                   return (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                       <Link href={`/bot/${bot._id}`} style={{textDecoration:"none"}}>
@@ -83,7 +89,7 @@ export default function Home() {
                               <BotCardTitle
                                 gutterBottom
                                 variant="h6"
-                                align="center">
+                                >
                                 {bot.name}
                               </BotCardTitle>
                             </CardContent>
@@ -92,7 +98,17 @@ export default function Home() {
                       </Link>
                     </Grid>
                   );
-                })}
+                }):<Grid item lg={12}><Box style={{display:"flex",justifyContent: "center",
+    alignItems: "center",flexDirection:"column",position:"relative",width:"auto"}}>
+                  <Image
+                src={search.src}
+                alt="search Result "
+
+                width={600}
+                height={480}
+                    
+                />
+                <Typography gutterBottom variant="h6" style={{fontWeight:700}}>No result for "{searchText}"</Typography></Box></Grid>}
               </Grid>
             </Box>
         </>

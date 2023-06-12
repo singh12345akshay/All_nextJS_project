@@ -13,3 +13,8 @@ export { default as whatsapp} from './whatsapp.png';
 export { default as facebook } from "./facebook.png";
 export { default as telegram } from "./telegram.png";
 export { default as login } from "./login.png";
+export { default as searchresult } from "./searcresult.jpg";
+export { default as searchResult } from "./searchresult.png";
+export { default as searchgif} from "./SEO.gif";
+export { default as search} from "./SEO-pana.png";
+

@@ -1,31 +1,25 @@
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 
-
-interface Item {
-  id: string;
-  name: string;
-}
 interface AppState {
-  data: Item[];
+  isSidebarOpen: boolean
 }
 
 const initialState: AppState = {
-  data: [],
+  isSidebarOpen: false
 };
 
-
-const dataSlice = createSlice({
-  name: 'botList',
+const appSlice = createSlice({
+  name: "app",
   initialState,
   reducers: {
-    setData(state, action: PayloadAction<Item[]>){
-      state.data = action.payload;
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    }
     },
   },
-});
+);
+export const { toggleSidebar} =
+  appSlice.actions;
+const store = configureStore({ reducer: appSlice.reducer});
 
-export const { setData } = dataSlice.actions;
-// export const homePageData=(state:any)=> state.data
-const store = configureStore({ reducer: dataSlice.reducer });
 export default store;
-

@@ -81,6 +81,7 @@ export const BotCardTitle = styled(Typography)(({theme}) => ({
     fontWeight: 700,
     whiteSpace: "nowrap",
     display: "-webkit-box",
+    textAlign:"center",
     WebkitLineClamp: 2,
     WebkitBoxOrient: "vertical",
     textOverflow: "ellipsis",

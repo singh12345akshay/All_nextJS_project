@@ -12,7 +12,7 @@ export const LoginPageWrapper = styled(Box)(({ theme }) => ({
     height: "100vh",
   },
   [theme.breakpoints.down("sm")]: {
-    height: "100vh",
+    width: "100vw",
   },
 }));
 
@@ -54,10 +54,11 @@ export const LoginCard = styled(Card)(({ theme }) => ({
      left:"50%"
   },
   [theme.breakpoints.down("md")]: {
-    left:"50%"
+    left:"50%",
   },
   [theme.breakpoints.down("sm")]: {
-left:"50%"
+    left: "50%",
+    width:"75%"
   },
 }));
 
@@ -86,7 +87,13 @@ export const CustomSignInButton = styled(Button)(({ theme }) => ({
 }));
 
 export const CustomTextField = styled(TextField)(({ theme }) => ({
-  width: theme.spacing(52),
+  width: "82%",
   margin: theme.spacing(1.5),
+  [theme.breakpoints.down("md")]: {
+    width:"90%"
+  },
+  [theme.breakpoints.down("sm")]: {
+  width:"90%"
+  },
                  
 }));

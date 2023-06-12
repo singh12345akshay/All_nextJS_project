@@ -1,78 +1,253 @@
 import {
   Box,
-  Drawer,
+ 
   Button,
+  CSSObject,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  SwipeableDrawer,
+  Theme,
   Typography,
-  AppBar,
+  // AppBar,
   styled,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import React, { useState ,useEffect} from "react";
+import IconButton from "@mui/material/IconButton";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRightIcon";
+import {  toggleSidebar } from "../../store/store";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useDispatch, useSelector } from "react-redux";
 import Divider from '@mui/material/Divider';
 import { ebotifylogo, menuItemlogo, userpic ,} from "src/assets";
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
+import Toolbar from "@mui/material/Toolbar";
 const drawerWidth = 240;
 interface SideBarComponentProps {
   children: React.ReactNode;
 }
 
-const Main = styled("main")(({ theme }) => ({
-  padding: theme.spacing(2),
-  marginLeft: 0,
-  backgroundColor: "#f1f1f1",
-  minHeight: `calc(100vh - ${theme.spacing(12)})`,
-  height: "auto",
-  marginTop: theme.spacing(8),
-  width: "100vw",
+// const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme }) => ({
+//   padding: theme.spacing(2),
+//   marginLeft: 0,
+//   backgroundColor: "#f1f1f1",
+//   minHeight: `calc(100vh - ${theme.spacing(12)})`,
+//   height: "auto",
+//   marginTop: theme.spacing(8),
+//   width: "100vw",
+// }));
+
+// const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
+//   open?: boolean;
+// }>(({ theme, open }) => ({
+//   flexGrow: 1,
+//   padding: theme.spacing(2),
+//   transition: theme.transitions.create("margin", {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   marginLeft: `-${drawerWidth}px`,
+//   ...(open && {
+//     transition: theme.transitions.create("margin", {
+//       easing: theme.transitions.easing.easeOut,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//     marginLeft: 0,
+//   }),
+//   backgroundColor: "#f1f1f1",
+//   minHeight: `calc(100vh - ${theme.spacing(0)})`, 
+//   height: 'auto'
+// }));
+
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })<AppBarProps>(({ theme, open }) => ({
+//   transition: theme.transitions.create(["margin", "width"], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   ...(open && {
+//     width: `calc(100% - ${drawerWidth}px)`,
+//     marginLeft: `${drawerWidth}px`,
+//     tration: theme.transitions.create([ "margin", "width"], {
+//       easing: theme.transitions.easing.easeOut,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//   }),
+//   backgroundColor:'white'
+// }));
+
+// const DrawerHeader = styled("div")(({ theme }) => ({
+//   display: "flex",
+//   alignItems: "center",
+//   padding: theme.spacing(0, 1),
+//   // necessary for content to be below app bar
+//   ...theme.mixins.toolbar,
+//   justifyContent: "flex-end",
+// })); width: `calc(100% - ${closedMixin(theme).width}px)`,
+
+const openedMixin = (theme: Theme): CSSObject => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+  backgroundColor: '#242a38',
+  [theme.breakpoints.down('sm')]: {
+    width:drawerWidth,
+   position: 'fixed', // Position the drawer
+  top: 0, // Position from top
+  bottom: 0, // Position from bottom
+  zIndex: theme.zIndex.drawer + 1,
+    
+  },
+   
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+    [theme.breakpoints.down('sm')]: {
+    width: '0',
+    },
+  backgroundColor: '#242a38'
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
 }));
 
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({ theme, open }) => ({
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  // width: open ? `calc(100% - ${drawerWidth}px)` : `calc(100% - ${closedMixin(theme).width}px)`,
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+  ...(!open && {
+   width: `calc(100% - ${closedMixin(theme).width})`,
+   [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    },
+    }),
+   backgroundColor: 'white',
+   color:"black"
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    })
+  }),
+);
+const Main = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(2),
+  paddingTop:theme.spacing(4),
+  backgroundColor: '#f1f1f1',
+  minHeight: `calc(100vh - ${theme.spacing(13)})`, 
+  height:"auto",// Use the height of the AppBar as margin top
+  marginTop: theme.mixins.toolbar.minHeight, // Use the height of the AppBar as margin top
+}));
 export default function SideBarComponent({ children }: SideBarComponentProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+   const isSidebarOpen = useSelector((state: any) => state.isSidebarOpen);
+     const dispatch = useDispatch();
   const router = useRouter();
+  const [username,setUsername]=useState("")
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    setIsMobileView(isSmallScreen);
+  }, [isSmallScreen]);
+  const cunstomSidebar = (event as React.MouseEvent) => {
+    if(event){
+      dispatch(toggleSidebar())
+      return;
+    }
+  }
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.clear();
     router.push("/signin");
   };
  const handleClick=(url:string)=>{
-router.push(url)
-   }
+router.push(url) }
+useEffect(()=>{
+  const data=localStorage.getItem("userName");
+if(data){
+  const name=JSON.parse(data)
+  setUsername(name)
+}},[]);
+  
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <AppBar position="fixed" sx={{ flexGrow: 1 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "flex-end",
-              paddingRight: 2,
-              backgroundColor: "white",
-            }}>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="h6"
-                component="div"
-                align="center"
-                style={{
-                  color: "blue",
-                  fontSize: 17,
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                }}>
-                Welcome Admin
-              </Typography>
+        <AppBar position="fixed" open={isSidebarOpen} >
+          <Toolbar style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}>
+            {!isSidebarOpen?<IconButton
+            onClick={() => dispatch(toggleSidebar())}
+          >
+            <MenuIcon />
+          </IconButton>: <IconButton
+            onClick={() => dispatch(toggleSidebar())}
+          >
+            <ChevronLeftIcon />
+          </IconButton>}
+          <Box sx={{display:"flex", justifyContent: "center",
+      alignItems: "center",}}>
               <Typography
                 gutterBottom
                 variant="h6"
@@ -80,22 +255,18 @@ router.push(url)
                 align="center"
                 style={{
                   fontSize: 17,
-                  color: "black",
+                  paddingRight:"8px",
+                  color: "inherit",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
                 }}>
-                Ebotify | sales@ebotify.com
+                Ebotify | {username}
               </Typography>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
+            {/* </div> */}
+            <div>
               <Image
                 src={userpic.src}
                 alt={"user image"}
@@ -104,38 +275,26 @@ router.push(url)
               
             </div>
           </Box>
+          </Toolbar>
         </AppBar>
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-              bgcolor: "#242A38",
-            },
-          }}
-          variant="permanent"
-          anchor="left">
-          <div style={{ flex: "1 1 auto" }}>
+        {isMobileView ?<SwipeableDrawer
+            anchor='left'
+            open={isSidebarOpen}
+            onClose={}
+          >
+           <DrawerHeader>
           <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            paddingY={1}>
-            <Button
-              variant="text"
-              onClick={() => {
-                handleClick("/home");
-              }}>
+            paddingY={1.5}>
               <Image
                 src={ebotifylogo.src}
                 alt={"Company image"}
                 width={133}
                 height={45}
               />
-            </Button>
           </Box>
+        </DrawerHeader>
+          <div style={{ flex: "1 1 auto" }}>
+          
           <List>
             {["Bot"].map((text) => (
               <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
@@ -143,7 +302,13 @@ router.push(url)
                   onClick={() => {
                     handleClick("/home");
                   }}>
-                  <ListItemIcon>
+                  <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: isSidebarOpen ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                  >
                     <Image
                       src={menuItemlogo.src}
                       alt={"Company image"}
@@ -151,36 +316,17 @@ router.push(url)
                       height={30}
                     />
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }}/>
                 </ListItemButton>
               </ListItem>
             ))}
             </List>
-            {/* <Divider sx={{backgroundColor:"white"}}/>
-
-            <List >
-            {[{name:"Web Bot",img:webBot},{name:"WhatsApp Bot",img:menuItemlogo},{name:"Facebook Bot",img:menuItemlogo},{name:"Telegram Bot",img:menuItemlogo}].map((obj) => (
-              <ListItem key={obj.name} disablePadding sx={{ color:"white"}}>
-                <ListItemButton
-                sx={{fontWeight:"700"}}
-                  onClick={() => {
-                    handleClick("/home");
-                  }}>
-                  <ListItemIcon>
-                    <Image
-                      src={obj.img.src}
-                      alt={"Company image"}
-                      width={30}
-                      height={30}
-                    />
-                  </ListItemIcon>
-                  <ListItemText sx={{fontWeight:"500"}} primary={obj.name} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-            </List> */}
           </div>
-          <div style={{ textAlign: "center", padding: "10px" }}>
+          {/* <div style={{display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',}}>
+            </div> */}
+          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
           <Button
                 variant="contained"
                 onClick={handleLogout}
@@ -191,12 +337,78 @@ router.push(url)
                   
                 }} >
                 <Typography variant="button" sx={{ marginLeft: "8px" }}>
-        LOGOUT
+        LOGOUT 
       </Typography>
               </Button>
               </div>
-        </Drawer>
-        <Main>{children}</Main>
+          </SwipeableDrawer>:<Drawer
+          variant="permanent"
+          open={isSidebarOpen}>
+           
+            <DrawerHeader>
+          <Box
+            paddingY={1.5}>
+              <Image
+                src={ebotifylogo.src}
+                alt={"Company image"}
+                width={133}
+                height={45}
+              />
+          </Box>
+        </DrawerHeader>
+          <div style={{ flex: "1 1 auto" }}>
+          
+          <List>
+            {["Bot"].map((text) => (
+              <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
+                <ListItemButton
+                  onClick={() => {
+                    handleClick("/home");
+                  }}>
+                  <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: isSidebarOpen ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                  >
+                    <Image
+                      src={menuItemlogo.src}
+                      alt={"Company image"}
+                      width={30}
+                      height={30}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }}/>
+                </ListItemButton>
+              </ListItem>
+            ))}
+            </List>
+          </div>
+          {/* <div style={{display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',}}>
+            </div> */}
+          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
+          <Button
+                variant="contained"
+                onClick={handleLogout}
+                startIcon={<LogoutIcon />}
+                sx={{
+                  bgcolor: "#1b63f6",
+                  borderRadius: 7,
+                  
+                }} >
+                <Typography variant="button" sx={{ marginLeft: "8px" }}>
+        LOGOUT 
+      </Typography>
+              </Button>
+              </div>
+        </Drawer>}
+        <Main component="main" >
+        {/* <DrawerHeader /> */}
+        {children}
+      </Main>
       </Box>
     </>
   );

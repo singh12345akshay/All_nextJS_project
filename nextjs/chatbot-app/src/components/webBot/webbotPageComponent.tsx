@@ -87,7 +87,7 @@ export default function BotPageComponent(props:Iprops) {
           sx={{
             position: "relative",
             width: "auto",
-            height: `calc(100vh - ${theme.spacing(16.5)})`,
+            height: `calc(100vh - ${theme.spacing(17.5)})`,
           }}>
           <Image src={(bot.imagesrc===''?getRandomImage():bot.imagesrc)} alt="image" fill={true} />
         </Box>

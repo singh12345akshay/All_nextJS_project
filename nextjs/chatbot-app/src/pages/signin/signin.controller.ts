@@ -76,7 +76,7 @@ const { enqueueSnackbar } = useSnackbar();
           });
           const authToken = response.data.body.token;
              localStorage.setItem("authToken", JSON.stringify(authToken));
-             const storedData = localStorage.getItem("authToken");
+             localStorage.setItem("userName",JSON.stringify(email.value));
           router.push("/home");
 
         } catch (error) {
