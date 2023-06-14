@@ -16,7 +16,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import MuiDrawer from '@mui/material/Drawer';
+import Drawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import React, { useState ,useEffect} from "react";
 import IconButton from "@mui/material/IconButton";
@@ -27,10 +27,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import Divider from '@mui/material/Divider';
 import { ebotifylogo, menuItemlogo, userpic ,} from "src/assets";
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
 import Toolbar from "@mui/material/Toolbar";
+import Mobilesidebar from "./mobilesidebar";
+import MainDrawer from "./mainDrawer";
 const drawerWidth = 240;
 interface SideBarComponentProps {
   children: React.ReactNode;
@@ -108,7 +111,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
    position: 'fixed', // Position the drawer
   top: 0, // Position from top
   bottom: 0, // Position from bottom
-  zIndex: theme.zIndex.drawer + 1,
+  zIndex: theme.zIndex.drawer + 2,
     
   },
    
@@ -130,7 +133,24 @@ const closedMixin = (theme: Theme): CSSObject => ({
   backgroundColor: '#242a38'
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    })
+  }),
+);
+
+ export const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -158,6 +178,9 @@ const AppBar = styled(MuiAppBar, {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    },
   }),
   ...(!open && {
    width: `calc(100% - ${closedMixin(theme).width})`,
@@ -169,23 +192,7 @@ const AppBar = styled(MuiAppBar, {
    color:"black"
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
 
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    })
-  }),
-);
 const Main = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(2),
@@ -200,20 +207,26 @@ export default function SideBarComponent({ children }: SideBarComponentProps) {
    const isSidebarOpen = useSelector((state: any) => state.isSidebarOpen);
      const dispatch = useDispatch();
   const router = useRouter();
-  const [username,setUsername]=useState("")
+  const [username, setUsername] = useState("")
   const theme = useTheme();
+ 
+
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     setIsMobileView(isSmallScreen);
   }, [isSmallScreen]);
-  const cunstomSidebar = (event as React.MouseEvent) => {
-    if(event){
-      dispatch(toggleSidebar())
-      return;
-    }
-  }
+  // const cunstomSidebar = (e) => {
+  //   if(e){
+  //     dispatch(toggleSidebar())
+  //     return;
+  //   }
+  // }
+  const handleClickAway = () => {
+        console.log("this is calling")
+    dispatch(toggleSidebar())
+  };
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.clear();
@@ -228,6 +241,61 @@ if(data){
   setUsername(name)
 }},[]);
   
+const drawerContent=<Box sx={{ display: 'flex', flexDirection: 'column',height:"100%"}}>
+            <DrawerHeader>
+          <Box
+            paddingY={1.5}>
+              <Image
+                src={ebotifylogo.src}
+                alt={"Company image"}
+                width={133}
+                height={45}
+              />
+          </Box>
+        </DrawerHeader>
+          <List sx={{ flexGrow: 1 }}>
+            {["Bot"].map((text) => (
+              <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
+                <ListItemButton
+                  onClick={() => {
+                    handleClick("/home");
+                  }}>
+                  <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: isSidebarOpen ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                  >
+                    <Image
+                      src={menuItemlogo.src}
+                      alt={"Company image"}
+                      width={30}
+                      height={30}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: isSidebarOpen ? 1 : 0 }}/>
+                </ListItemButton>
+              </ListItem>
+            ))}
+            </List>
+
+          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
+          <Button
+                variant="contained"
+                onClick={handleLogout}
+                startIcon={<LogoutIcon />}
+                sx={{
+                  bgcolor: "#1b63f6",
+                  borderRadius: 7,
+                  
+                }} >
+                <Typography variant="button" sx={{ marginLeft: "8px" }}>
+        LOGOUT 
+      </Typography>
+              </Button>
+              </div>
+              </Box>
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -254,7 +322,7 @@ if(data){
                 component="div"
                 align="center"
                 style={{
-                  fontSize: 17,
+                  fontSize: isMobileView ? 14 : 17,
                   paddingRight:"8px",
                   color: "inherit",
                   textOverflow: "ellipsis",
@@ -277,136 +345,25 @@ if(data){
           </Box>
           </Toolbar>
         </AppBar>
-        {isMobileView ?<SwipeableDrawer
+        {/* <Mobilesidebar/> */}
+ {isMobileView?<Drawer
             anchor='left'
             open={isSidebarOpen}
-            onClose={}
-          >
-           <DrawerHeader>
-          <Box
-            paddingY={1.5}>
-              <Image
-                src={ebotifylogo.src}
-                alt={"Company image"}
-                width={133}
-                height={45}
-              />
-          </Box>
-        </DrawerHeader>
-          <div style={{ flex: "1 1 auto" }}>
-          
-          <List>
-            {["Bot"].map((text) => (
-              <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
-                <ListItemButton
-                  onClick={() => {
-                    handleClick("/home");
-                  }}>
-                  <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: isSidebarOpen ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                  >
-                    <Image
-                      src={menuItemlogo.src}
-                      alt={"Company image"}
-                      width={30}
-                      height={30}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }}/>
-                </ListItemButton>
-              </ListItem>
-            ))}
-            </List>
-          </div>
-          {/* <div style={{display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',}}>
-            </div> */}
-          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
-          <Button
-                variant="contained"
-                onClick={handleLogout}
-                startIcon={<LogoutIcon />}
-                sx={{
-                  bgcolor: "#1b63f6",
-                  borderRadius: 7,
-                  
-                }} >
-                <Typography variant="button" sx={{ marginLeft: "8px" }}>
-        LOGOUT 
-      </Typography>
-              </Button>
-              </div>
-          </SwipeableDrawer>:<Drawer
+            onClose={handleClickAway}
+             PaperProps={{
+        style: {
+          backgroundColor: '#242a38', // Change the background color here
+          width: drawerWidth, // Change the width here
+        },
+      }}
+          > {drawerContent}</Drawer>:<CustomDrawer
           variant="permanent"
-          open={isSidebarOpen}>
-           
-            <DrawerHeader>
-          <Box
-            paddingY={1.5}>
-              <Image
-                src={ebotifylogo.src}
-                alt={"Company image"}
-                width={133}
-                height={45}
-              />
-          </Box>
-        </DrawerHeader>
-          <div style={{ flex: "1 1 auto" }}>
-          
-          <List>
-            {["Bot"].map((text) => (
-              <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
-                <ListItemButton
-                  onClick={() => {
-                    handleClick("/home");
-                  }}>
-                  <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: isSidebarOpen ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                  >
-                    <Image
-                      src={menuItemlogo.src}
-                      alt={"Company image"}
-                      width={30}
-                      height={30}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }}/>
-                </ListItemButton>
-              </ListItem>
-            ))}
-            </List>
-          </div>
-          {/* <div style={{display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',}}>
-            </div> */}
-          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
-          <Button
-                variant="contained"
-                onClick={handleLogout}
-                startIcon={<LogoutIcon />}
-                sx={{
-                  bgcolor: "#1b63f6",
-                  borderRadius: 7,
-                  
-                }} >
-                <Typography variant="button" sx={{ marginLeft: "8px" }}>
-        LOGOUT 
-      </Typography>
-              </Button>
-              </div>
-        </Drawer>}
+          open={isSidebarOpen}
+           onClose={handleClickAway}
+        >
+           {drawerContent}
+        </CustomDrawer>}
         <Main component="main" >
-        {/* <DrawerHeader /> */}
         {children}
       </Main>
       </Box>

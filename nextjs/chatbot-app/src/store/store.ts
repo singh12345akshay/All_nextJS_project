@@ -14,6 +14,7 @@ const appSlice = createSlice({
   reducers: {
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
+      console.log("state change",state.isSidebarOpen)
     }
     },
   },

@@ -58,7 +58,7 @@ export default function BotPageComponent(props:Iprops) {
     if (bot) {
       window.initPayload = "hi";
       window.metadata = {};
-            const script = document.createElement("script");
+      const script = document.createElement("script");
       script.src = bot.botscript;
       script.async = true;
       document.body.appendChild(script);

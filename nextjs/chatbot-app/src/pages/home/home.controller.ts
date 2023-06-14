@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { setData } from 'src/store/store';
 
 export interface Idata {
   _id: string;
@@ -17,8 +16,8 @@ export default function HomeController() {
   const router = useRouter();
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
 
   const fetchData = async () => {
     const storedData = localStorage.getItem("authToken");
@@ -42,7 +41,6 @@ export default function HomeController() {
         setBot(data);
         setLoading(false);
          localStorage.setItem("botList", JSON.stringify(data));
-        dispatch(setData(data));
       } catch (error) {
         console.error(error);
       }
