@@ -39,65 +39,6 @@ interface SideBarComponentProps {
   children: React.ReactNode;
 }
 
-// const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme }) => ({
-//   padding: theme.spacing(2),
-//   marginLeft: 0,
-//   backgroundColor: "#f1f1f1",
-//   minHeight: `calc(100vh - ${theme.spacing(12)})`,
-//   height: "auto",
-//   marginTop: theme.spacing(8),
-//   width: "100vw",
-// }));
-
-// const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-//   open?: boolean;
-// }>(({ theme, open }) => ({
-//   flexGrow: 1,
-//   padding: theme.spacing(2),
-//   transition: theme.transitions.create("margin", {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   marginLeft: `-${drawerWidth}px`,
-//   ...(open && {
-//     transition: theme.transitions.create("margin", {
-//       easing: theme.transitions.easing.easeOut,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//     marginLeft: 0,
-//   }),
-//   backgroundColor: "#f1f1f1",
-//   minHeight: `calc(100vh - ${theme.spacing(0)})`, 
-//   height: 'auto'
-// }));
-
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })<AppBarProps>(({ theme, open }) => ({
-//   transition: theme.transitions.create(["margin", "width"], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   ...(open && {
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     marginLeft: `${drawerWidth}px`,
-//     tration: theme.transitions.create([ "margin", "width"], {
-//       easing: theme.transitions.easing.easeOut,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//   }),
-//   backgroundColor:'white'
-// }));
-
-// const DrawerHeader = styled("div")(({ theme }) => ({
-//   display: "flex",
-//   alignItems: "center",
-//   padding: theme.spacing(0, 1),
-//   // necessary for content to be below app bar
-//   ...theme.mixins.toolbar,
-//   justifyContent: "flex-end",
-// })); width: `calc(100% - ${closedMixin(theme).width}px)`,
-
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -241,61 +182,66 @@ if(data){
   setUsername(name)
 }},[]);
   
-const drawerContent=<Box sx={{ display: 'flex', flexDirection: 'column',height:"100%"}}>
-            <DrawerHeader>
-          <Box
-            paddingY={1.5}>
+const drawerContent = (
+  <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <DrawerHeader>
+      <Box paddingY={1.5}>
+        <Image
+          src={ebotifylogo.src}
+          alt={"Company image"}
+          width={133}
+          height={45}
+        />
+      </Box>
+    </DrawerHeader>
+    <List sx={{ flexGrow: 1 }}>
+      {["Bot"].map((text) => (
+        <ListItem
+          key={text}
+          disablePadding
+          sx={{ bgcolor: "#0b0c0e61", color: "white" }}>
+          <ListItemButton
+            onClick={() => {
+              handleClick("/home");
+            }}>
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: isSidebarOpen ? 3 : "auto",
+                justifyContent: "center",
+              }}>
               <Image
-                src={ebotifylogo.src}
+                src={menuItemlogo.src}
                 alt={"Company image"}
-                width={133}
-                height={45}
+                width={30}
+                height={30}
               />
-          </Box>
-        </DrawerHeader>
-          <List sx={{ flexGrow: 1 }}>
-            {["Bot"].map((text) => (
-              <ListItem key={text} disablePadding sx={{ bgcolor: "#88c1d5" }}>
-                <ListItemButton
-                  onClick={() => {
-                    handleClick("/home");
-                  }}>
-                  <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: isSidebarOpen ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                  >
-                    <Image
-                      src={menuItemlogo.src}
-                      alt={"Company image"}
-                      width={30}
-                      height={30}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: isSidebarOpen ? 1 : 0 }}/>
-                </ListItemButton>
-              </ListItem>
-            ))}
-            </List>
+            </ListItemIcon>
+            <ListItemText
+              primary={text}
+              sx={{ opacity: isSidebarOpen ? 1 : 0 }}
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
 
-          <div style={{ textAlign: "center", padding: "10px" ,marginBottom:"8px"}}>
-          <Button
-                variant="contained"
-                onClick={handleLogout}
-                startIcon={<LogoutIcon />}
-                sx={{
-                  bgcolor: "#1b63f6",
-                  borderRadius: 7,
-                  
-                }} >
-                <Typography variant="button" sx={{ marginLeft: "8px" }}>
-        LOGOUT 
-      </Typography>
-              </Button>
-              </div>
-              </Box>
+    <div style={{ textAlign: "center", padding: "10px", marginBottom: "8px" }}>
+      <Button
+        variant="contained"
+        onClick={handleLogout}
+        startIcon={<LogoutIcon />}
+        sx={{
+          bgcolor: "#5052ff",
+          borderRadius: 7,
+        }}>
+        <Typography variant="button" sx={{ marginLeft: "8px" }}>
+          LOGOUT
+        </Typography>
+      </Button>
+    </div>
+  </Box>
+);
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -338,8 +284,8 @@ const drawerContent=<Box sx={{ display: 'flex', flexDirection: 'column',height:"
               <Image
                 src={userpic.src}
                 alt={"user image"}
-                width={50}
-                height={50}></Image>
+                width={isMobileView?40:50}
+                height={isMobileView?40:50}></Image>
               
             </div>
           </Box>

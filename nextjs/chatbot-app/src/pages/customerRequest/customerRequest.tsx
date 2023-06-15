@@ -20,14 +20,19 @@ import {
   TablePagination,
   TableHead,
   TableRow,
+  ThemeProvider,
   TextField,
   Typography,
   styled,
   tableCellClasses,
+  Tooltip,
+  useMediaQuery
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { createTheme } from '@mui/material/styles';
+
 import IconButton from '@mui/material/IconButton';
 import axios from "axios";
 import React, { useState, useEffect, ChangeEvent } from "react";
@@ -41,6 +46,29 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { useSnackbar } from "notistack";
 import {nodatafound} from "../../assets/images";
 
+const CustomEditAddReqDialog= styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    [theme.breakpoints.up('md')]:{
+minWidth:"800px"
+     },
+//      [theme.breakpoints.up('sm')]:{
+// minWidth:"700px"
+//      },
+     [theme.breakpoints.down('md')]:{
+width:"80%"
+     }
+  },
+}));
+const CustomDeleteDialog= styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+     [theme.breakpoints.up('sm')]:{
+minWidth:"550px"
+     },
+     [theme.breakpoints.down('sm')]:{
+width:"80%"
+     }
+  },
+}));
 const styledButton = styled(Button)(() => ({
   [`&.${ButtonBase}`]: {
     padding: "8px",
@@ -55,6 +83,10 @@ const styledButton = styled(Button)(() => ({
 }));
 
 const StyledTableCell = styled(TableCell)(() => ({
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#242A38",
     fontSize: 16,
@@ -68,6 +100,7 @@ const StyledTableCell = styled(TableCell)(() => ({
   color: "rgb(209, 213, 219)",
   borderBottom: "1px solid rgb(45, 55, 72)",
   minWidth: "120px",
+  maxWidth: "600px",
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -159,7 +192,8 @@ export default function CustomerRequest() {
   const [isEdit, setIsEdit]=useState(false)
   const [isLoading, setIsLoading] = useState(true);
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-   const [selectedItem, setSelectedItem] = useState({});
+  const [selectedItem, setSelectedItem] = useState({});
+  const theme = useTheme();
    const [addRequestDetails, setAddRequestDetails]=useState({
     description:"",
     status:""
@@ -169,7 +203,7 @@ export default function CustomerRequest() {
     description: "",
     status: "",
   });
-  
+
   const [dialogOpen, setDialogOpen] = useState(false);
  const handleDeleteClick = (data:IapiResponse | ApiResponseArray ) => {
     setSelectedItem(data);
@@ -469,34 +503,49 @@ const autoPageChange=async ()=>{
   }
     return (
       <SideBarComponent>
-        <div>
-          <Box sx={{
-            textAlign: "right",
-            marginBottom: "16px",
-          }}>
+        <>
+          <Box
+            sx={{
+              textAlign: "right",
+              marginBottom: "16px",
+            }}>
             <Button
               startIcon={<AddIcon />}
               variant="contained"
-              onClick={() => { handleAdd() }}
+              onClick={() => {
+                handleAdd();
+              }}
               color="primary"
-              sx={{textTransform: "Capitalize",fontWeight: "700"}}
-            >
+              sx={{ textTransform: "Capitalize", fontWeight: "700" }}>
               Add Request
             </Button>
             <Button
               startIcon={<DeleteIcon />}
               variant="contained"
               disabled={!data.length}
-              onClick={() => { handleDeleteClick(data)}}
+              onClick={() => {
+                handleDeleteClick(data);
+              }}
               color="primary"
-              sx={{ marginLeft: "10px",textTransform: "Capitalize",fontWeight: "700"}}>
+              sx={{
+                marginLeft: "10px",
+                textTransform: "Capitalize",
+                fontWeight: "700",
+              }}>
               Clear All
             </Button>
           </Box>
-          <Box>
-            <TableContainer component={Paper} style={{ maxHeight: 'calc(100vh - 175px)', overflow: 'auto' , minWidth:"930px"}}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead style={{position:"sticky",top:"0",zIndex:100}}>
+          <Box style={{ width: "100%", paddingRight: "16px" }}>
+            <TableContainer
+              style={{
+                maxHeight: "calc(100vh - 175px)",
+                overflow: "auto",
+                position: "fixed",
+                width: "95.5%",
+              }}>
+              <Table aria-label="simple table">
+                <TableHead
+                  style={{ position: "sticky", top: "0", zIndex: 100 }}>
                   <TableRow sx={{ backgroundColor: "#242A38", color: "white" }}>
                     <StyledTableCell>Request ID</StyledTableCell>
                     <StyledTableCell>Description</StyledTableCell>
@@ -506,123 +555,123 @@ const autoPageChange=async ()=>{
                 </TableHead>
                 {data.length === 0 ? (
                   <TableRow sx={{ backgroundColor: "#111827", color: "white" }}>
-          <TableCell colSpan={4} >
-            <Box
-
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height={350}
-      fontWeight="bold"
-      fontSize={20}
-      position="relative"
-    >
-     <Image
-     src={nodatafound.src}
-     alt={"No Data Found"}
-     fill={true}
-     />
-     
-    </Box>
-
-          </TableCell>
-        </TableRow>
-                  
-                ) : (<>
-                  <TableBody >
-                  {(rowsPerPage > 0
-            ?data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((data: IapiResponse) => (
-                    <TableRow
-                      key={data._id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}>
-                      <StyledTableCell component="th" scope="row">
-                        {data.requestId}
-                      </StyledTableCell>
-                      <StyledTableCell>{data.description}</StyledTableCell>
-                      <StyledTableCell>
-                        <Chip
-                          label={data.status}
-                          variant="outlined"
-                          color={getChipColor(data.status)}
+                    <TableCell colSpan={4}>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height={350}
+                        fontWeight="bold"
+                        fontSize={20}
+                        position="relative">
+                        <Image
+                          src={nodatafound.src}
+                          alt={"No Data Found"}
+                          fill={true}
                         />
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        <Box sx={{ display: "flex" }}>
-                          <Button
-                            style={buttonstyle}
-                            onClick={() => {
-                              handleEdit(data);
-                            }}>
-                            <EditIcon sx={{ fontSize: "20px" }} />
-                          </Button>
-
-                          <Button
-                            style={buttonstyle}
-                            onClick={() => {
-                              handleDeleteClick(data);
-                            }}>
-                            <DeleteIcon sx={{ fontSize: "20px" }} />
-                          </Button>
-                        </Box>
-                      </StyledTableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter style={{position:"sticky",bottom:"0",zIndex:100}}>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                sx:{
-
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-              sx={{
-                backgroundColor: "rgb(17, 24, 39)",
-                borderTop: "1px solid rgb(45, 55, 72)",
-                color: "rgb(237, 242, 247)",
-                "& .MuiSvgIcon-root": {
-                  color: "white", // Change the color to any desired color
-                },
-                "& .MuiTablePagination-menuItem": {
-                  backgroundColor: "#111827" ,
-                  priority: 1000,
-                  textAlign:"center",
-                  color:"black"
-                },
-                "& .MuiTablePagination-root": {
-borderRadius:"5px",
-                  backgroundColor: "#111827",
-                 
-                }
-              }}
-            />
-          </TableRow>
-        </TableFooter ></>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <>
+                    <TableBody>
+                      {(rowsPerPage > 0
+                        ? data.slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                        : data
+                      ).map((data: IapiResponse) => (
+                        <TableRow key={data._id}>
+                          <StyledTableCell component="th" scope="row">
+                            {data.requestId}
+                          </StyledTableCell>
+                          <StyledTableCell>{data.description}</StyledTableCell>
+                          <StyledTableCell>
+                            <Chip
+                              label={data.status}
+                              variant="outlined"
+                              color={getChipColor(data.status)}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            <Tooltip title="Edit" arrow followCursor>
+                              <Button
+                                style={buttonstyle}
+                                onClick={() => {
+                                  handleEdit(data);
+                                }}>
+                                <EditIcon sx={{ fontSize: "20px" }} />
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="Delete" arrow followCursor>
+                              <Button
+                                style={buttonstyle}
+                                onClick={() => {
+                                  handleDeleteClick(data);
+                                }}>
+                                <DeleteIcon sx={{ fontSize: "20px" }} />
+                              </Button>
+                            </Tooltip>
+                          </StyledTableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                    <TableFooter
+                      style={{ position: "sticky", bottom: "0", zIndex: 100 }}>
+                      <TableRow>
+                        <TablePagination
+                          rowsPerPageOptions={[
+                            5,
+                            10,
+                            25,
+                            { label: "All", value: -1 },
+                          ]}
+                          colSpan={5}
+                          count={data.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            inputProps: {
+                              "aria-label": "rows per page",
+                            },
+                            sx: {},
+                            native: true,
+                          }}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                          ActionsComponent={TablePaginationActions}
+                          sx={{
+                            backgroundColor: "rgb(17, 24, 39)",
+                            borderTop: "1px solid rgb(45, 55, 72)",
+                            color: "rgb(237, 242, 247)",
+                            "& .MuiSvgIcon-root": {
+                              color: "white", // Change the color to any desired color
+                            },
+                            "& .MuiTablePagination-menuItem": {
+                              backgroundColor: "#111827",
+                              priority: 1000,
+                              textAlign: "center",
+                              color: "black",
+                            },
+                            "& .MuiTablePagination-root": {
+                              borderRadius: "5px",
+                              backgroundColor: "#111827",
+                            },
+                          }}
+                        />
+                      </TableRow>
+                    </TableFooter>
+                  </>
                 )}
-                
               </Table>
             </TableContainer>
           </Box>
-          <Dialog
+          <CustomEditAddReqDialog
             open={dialogOpen}
             onClose={handleClose}
-            PaperProps={{ style: { minWidth: "800px" } }}>
+           >
+            
             <DialogTitle
               style={{
                 textAlign: "center",
@@ -637,15 +686,23 @@ borderRadius:"5px",
                 multiline
                 rows={5}
                 label="Description"
-                value={isEdit ? requestDetails.description : addRequestDetails.description}
-                onChange={isEdit ? handleDescriptionChange : handleAddDescriptionChange}
+                value={
+                  isEdit
+                    ? requestDetails.description
+                    : addRequestDetails.description
+                }
+                onChange={
+                  isEdit ? handleDescriptionChange : handleAddDescriptionChange
+                }
                 fullWidth
                 sx={{ margin: "8px 0px" }}
               />
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select
-                  value={isEdit ? requestDetails.status : addRequestDetails.status}
+                  value={
+                    isEdit ? requestDetails.status : addRequestDetails.status
+                  }
                   label="Status"
                   onChange={isEdit ? handleStatusChange : handleAddStatusChange}
                   fullWidth>
@@ -671,38 +728,41 @@ borderRadius:"5px",
                 }}>
                 Cancel
               </Button>
-              {isEdit ? <Button
-                variant="contained"
-                color="success"
-                onClick={() => {
-                  editRequest(requestDetails);
-                }}
-                sx={{
-                  fontWeight: "700",
-                  margin: "10px",
-                  textTransform: "Capitalize",
-                }}>
-                Update
-              </Button> : <Button
-                variant="contained"
-                color="success"
-                onClick={() => {
-                  addRequest(addRequestDetails);
-                }}
-                sx={{
-                  fontWeight: "700",
-                  margin: "10px",
-                  textTransform: "Capitalize",
-                }}>
-                Add
-              </Button>}
-            
+              {isEdit ? (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => {
+                    editRequest(requestDetails);
+                  }}
+                  sx={{
+                    fontWeight: "700",
+                    margin: "10px",
+                    textTransform: "Capitalize",
+                  }}>
+                  Update
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => {
+                    addRequest(addRequestDetails);
+                  }}
+                  sx={{
+                    fontWeight: "700",
+                    margin: "10px",
+                    textTransform: "Capitalize",
+                  }}>
+                  Add
+                </Button>
+              )}
             </DialogActions>
-          </Dialog>
-          <Dialog
+          </CustomEditAddReqDialog>
+          <CustomDeleteDialog
             open={openDeleteDialog}
             onClose={handleDeleteCancel}
-            PaperProps={{ style: { minWidth: "550px" } }}>
+            >
             <DialogTitle>
               <Box
                 sx={{
@@ -739,10 +799,10 @@ borderRadius:"5px",
                 }}>
                 No
               </Button>
-           
+
               <Button
                 variant="contained"
-                onClick={async() => {
+                onClick={async () => {
                   await deleteRequest(selectedItem);
                   autoPageChange();
                 }}
@@ -755,8 +815,8 @@ borderRadius:"5px",
                 Yes
               </Button>
             </DialogActions>
-          </Dialog>
-        </div>
+          </CustomDeleteDialog>
+        </>
       </SideBarComponent>
     );
   }

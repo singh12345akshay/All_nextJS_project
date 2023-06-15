@@ -31,13 +31,7 @@ export const BotImage = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down("lg")]: {
     width:theme.spacing(0)
-  },
-  [theme.breakpoints.down("md")]: {
-    width:theme.spacing(0)
-  },
-  [theme.breakpoints.down("sm")]: {
-width:theme.spacing(0)
-  },
+  }
 }));
 
 export const LoginCard = styled(Card)(({ theme }) => ({

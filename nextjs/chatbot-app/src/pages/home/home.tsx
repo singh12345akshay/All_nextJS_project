@@ -11,7 +11,7 @@ import { cardlogo, searchResult,searchgif,search } from "../../assets/images";
 import SideBarComponent from "../../components/sideBar/sideBarComponent";
 
 import HomeController from "./home.controller";
-import { BotCard, BotCardLogo, BotCardTitle, HeaderTitle, PageHeader, Search ,SearchIconWrapper,StyledInputBase} from "./home.style";
+import { BotCard, BotCardLogo, BotCardTitle, HeaderTitle, PageHeader, Search ,SearchIconWrapper,StyledInputBase,SearchNotfoundImg} from "./home.style";
 
 export default function Home() {
   const { getters, handlers } = HomeController();
@@ -31,7 +31,6 @@ export default function Home() {
             <PageHeader >
                <HeaderTitle >
             <Typography
-              gutterBottom
               variant="h6"
               component="div"
               align="center"
@@ -98,17 +97,18 @@ export default function Home() {
                       </Link>
                     </Grid>
                   );
-                }):<Grid item lg={12}><Box style={{display:"flex",justifyContent: "center",
-    alignItems: "center",flexDirection:"column",position:"relative",width:"auto"}}>
+                }):<Grid item sm={12} md={12} lg={12}>
+                  <SearchNotfoundImg >
                   <Image
                 src={search.src}
                 alt="search Result "
-
                 width={600}
                 height={480}
-                    
+              
                 />
-                <Typography gutterBottom variant="h6" style={{fontWeight:700}}>No result for "{searchText}"</Typography></Box></Grid>}
+                <Typography align="center" gutterBottom variant="h6" style={{fontWeight:700}}>No result for "{searchText}"</Typography>
+                </SearchNotfoundImg>
+                </Grid>}
               </Grid>
             </Box>
         </>

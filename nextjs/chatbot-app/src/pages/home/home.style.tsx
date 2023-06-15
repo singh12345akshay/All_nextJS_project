@@ -10,14 +10,17 @@ export const PageHeader = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const HeaderTitle=styled(Box)(({theme})=>({
+export const HeaderTitle = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up(750)]: {
     marginRight: "auto",
     marginLeft: "50%",
     transform: "translate(-50%, 0)",
-    [theme.breakpoints.down(750)]: {
-    margin:"auto"
   },
-}))
+
+  [theme.breakpoints.down(750)]: {
+    margin: "auto",
+  },
+}));
 
 export const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -86,3 +89,14 @@ export const BotCardTitle = styled(Typography)(({theme}) => ({
     WebkitBoxOrient: "vertical",
     textOverflow: "ellipsis",
  }))
+
+ export const SearchNotfoundImg = styled(Box)(({ theme }) => ({
+  // position:"relative",
+  [theme.breakpoints.up(700)]: {
+    width:"600px",
+    height:"480px"
+  },
+  [theme.breakpoints.down(700)]: {
+
+  },
+}));
