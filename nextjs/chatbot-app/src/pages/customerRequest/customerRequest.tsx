@@ -35,7 +35,7 @@ import { createTheme } from '@mui/material/styles';
 
 import IconButton from '@mui/material/IconButton';
 import axios from "axios";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState,useEffect, ChangeEvent } from "react";
 import { useTheme } from '@mui/material/styles';
 import Image from "next/image";
 import SideBarComponent from "src/components/sideBar/sideBarComponent";
@@ -45,6 +45,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useSnackbar } from "notistack";
 import {nodatafound} from "../../assets/images";
+
 
 const CustomEditAddReqDialog= styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
@@ -86,7 +87,6 @@ const StyledTableCell = styled(TableCell)(() => ({
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
-
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#242A38",
     fontSize: 16,
@@ -535,143 +535,142 @@ const autoPageChange=async ()=>{
               Clear All
             </Button>
           </Box>
-          <Box style={{ width: "100%", paddingRight: "16px" }}>
-            <TableContainer
-              style={{
-                maxHeight: "calc(100vh - 175px)",
-                overflow: "auto",
-                position: "fixed",
-                width: "95.5%",
-              }}>
-              <Table aria-label="simple table">
-                <TableHead
-                  style={{ position: "sticky", top: "0", zIndex: 100 }}>
-                  <TableRow sx={{ backgroundColor: "#242A38", color: "white" }}>
-                    <StyledTableCell>Request ID</StyledTableCell>
-                    <StyledTableCell>Description</StyledTableCell>
-                    <StyledTableCell>Status</StyledTableCell>
-                    <StyledTableCell>Action</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                {data.length === 0 ? (
-                  <TableRow sx={{ backgroundColor: "#111827", color: "white" }}>
-                    <TableCell colSpan={4}>
-                      <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        height={350}
-                        fontWeight="bold"
-                        fontSize={20}
-                        position="relative">
-                        <Image
-                          src={nodatafound.src}
-                          alt={"No Data Found"}
-                          fill={true}
-                        />
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  <>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? data.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data
-                      ).map((data: IapiResponse) => (
-                        <TableRow key={data._id}>
-                          <StyledTableCell component="th" scope="row">
-                            {data.requestId}
-                          </StyledTableCell>
-                          <StyledTableCell>{data.description}</StyledTableCell>
-                          <StyledTableCell>
-                            <Chip
-                              label={data.status}
-                              variant="outlined"
-                              color={getChipColor(data.status)}
-                            />
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            <Tooltip title="Edit" arrow followCursor>
-                              <Button
-                                style={buttonstyle}
-                                onClick={() => {
-                                  handleEdit(data);
-                                }}>
-                                <EditIcon sx={{ fontSize: "20px" }} />
-                              </Button>
-                            </Tooltip>
-                            <Tooltip title="Delete" arrow followCursor>
-                              <Button
-                                style={buttonstyle}
-                                onClick={() => {
-                                  handleDeleteClick(data);
-                                }}>
-                                <DeleteIcon sx={{ fontSize: "20px" }} />
-                              </Button>
-                            </Tooltip>
-                          </StyledTableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter
-                      style={{ position: "sticky", bottom: "0", zIndex: 100 }}>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[
-                            5,
-                            10,
-                            25,
-                            { label: "All", value: -1 },
-                          ]}
-                          colSpan={5}
-                          count={data.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          SelectProps={{
-                            inputProps: {
-                              "aria-label": "rows per page",
-                            },
-                            sx: {},
-                            native: true,
-                          }}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                          sx={{
-                            backgroundColor: "rgb(17, 24, 39)",
-                            borderTop: "1px solid rgb(45, 55, 72)",
-                            color: "rgb(237, 242, 247)",
-                            "& .MuiSvgIcon-root": {
-                              color: "white", // Change the color to any desired color
-                            },
-                            "& .MuiTablePagination-menuItem": {
-                              backgroundColor: "#111827",
-                              priority: 1000,
-                              textAlign: "center",
-                              color: "black",
-                            },
-                            "& .MuiTablePagination-root": {
-                              borderRadius: "5px",
-                              backgroundColor: "#111827",
-                            },
-                          }}
-                        />
+          <TableContainer
+            sx={{
+              maxHeight: "calc(100vh - 175px)",
+              [theme.breakpoints.up('sm')]:{
+              overflow: "auto",
+              position: "relative"},
+              [theme.breakpoints.down('sm')]: {
+               position:"fixed",
+               width:"100%",
+              overflow: "auto",
+              whiteSpace:"nowrap"
+              },
+            }}>
+            <Table aria-label="simple table">
+              <TableHead style={{ position: "sticky", top: "0", zIndex: 100 }}>
+                <TableRow sx={{ backgroundColor: "#242A38", color: "white" }}>
+                  <StyledTableCell>Request ID</StyledTableCell>
+                  <StyledTableCell>Description</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              {data.length === 0 ? (
+                <TableRow sx={{ backgroundColor: "#111827", color: "white" }}>
+                  <TableCell colSpan={4}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      height={350}
+                      fontWeight="bold"
+                      fontSize={20}
+                      position="relative">
+                      <Image
+                        src={nodatafound.src}
+                        alt={"No Data Found"}
+                        fill={true}
+                      />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                  <TableBody>
+                    {(rowsPerPage > 0
+                      ? data.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                      : data
+                    ).map((data: IapiResponse) => (
+                      <TableRow key={data._id}>
+                        <StyledTableCell component="th" scope="row">
+                          {data.requestId}
+                        </StyledTableCell>
+                        <StyledTableCell>{data.description}</StyledTableCell>
+                        <StyledTableCell>
+                          <Chip
+                            label={data.status}
+                            variant="outlined"
+                            color={getChipColor(data.status)}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          <Tooltip title="Edit" arrow followCursor>
+                            <Button
+                              style={buttonstyle}
+                              onClick={() => {
+                                handleEdit(data);
+                              }}>
+                              <EditIcon sx={{ fontSize: "20px" }} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Delete" arrow followCursor>
+                            <Button
+                              style={buttonstyle}
+                              onClick={() => {
+                                handleDeleteClick(data);
+                              }}>
+                              <DeleteIcon sx={{ fontSize: "20px" }} />
+                            </Button>
+                          </Tooltip>
+                        </StyledTableCell>
                       </TableRow>
-                    </TableFooter>
-                  </>
-                )}
-              </Table>
-            </TableContainer>
-          </Box>
-          <CustomEditAddReqDialog
-            open={dialogOpen}
-            onClose={handleClose}
-           >
-            
+                    ))}
+                  </TableBody>
+                  <TableFooter
+                    style={{ position: "sticky", bottom: "0", zIndex: 100 }}>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={[
+                          5,
+                          10,
+                          25,
+                          { label: "All", value: -1 },
+                        ]}
+                        colSpan={5}
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        SelectProps={{
+                          inputProps: {
+                            "aria-label": "rows per page",
+                          },
+                          sx: {},
+                          native: true,
+                        }}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                        sx={{
+                          backgroundColor: "rgb(17, 24, 39)",
+                          borderTop: "1px solid rgb(45, 55, 72)",
+                          color: "rgb(237, 242, 247)",
+                          "& .MuiSvgIcon-root": {
+                            color: "white", // Change the color to any desired color
+                          },
+                          "& .MuiTablePagination-menuItem": {
+                            backgroundColor: "#111827",
+                            priority: 1000,
+                            textAlign: "center",
+                            color: "black",
+                          },
+                          "& .MuiTablePagination-root": {
+                            borderRadius: "5px",
+                            backgroundColor: "#111827",
+                          },
+                        }}
+                      />
+                    </TableRow>
+                  </TableFooter>
+                </>
+              )}
+            </Table>
+          </TableContainer>
+          <CustomEditAddReqDialog open={dialogOpen} onClose={handleClose}>
             <DialogTitle
               style={{
                 textAlign: "center",
@@ -761,8 +760,7 @@ const autoPageChange=async ()=>{
           </CustomEditAddReqDialog>
           <CustomDeleteDialog
             open={openDeleteDialog}
-            onClose={handleDeleteCancel}
-            >
+            onClose={handleDeleteCancel}>
             <DialogTitle>
               <Box
                 sx={{

@@ -1,8 +1,6 @@
 import axios from "axios";
-import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { RegexLibrary } from "../Regex";
 
 export default function ManageuserController() {

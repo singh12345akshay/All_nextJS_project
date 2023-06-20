@@ -1,25 +1,27 @@
 import { Box, Button, Card, styled } from "@mui/material";
 
 export const LoginCard = styled(Card)(({ theme }) => ({
-  margin: "auto",
-  width: "520px",
-  padding: theme.spacing(4, 4),
-  borderRadius: "8px",
+  width: theme.spacing(60),
+  padding: theme.spacing(4),
+  borderRadius: theme.spacing(1),
   boxShadow: theme.shadows[1],
-  // position:"relative",
-  // position: "absolute",
-  // transform: "translate(-50%, -50%)",
+  top: "50%",
+  left: "50%",
+  position: "absolute",
+  transform: "translate(-50%, -50%)",
   [theme.breakpoints.down("lg")]: {
-    width: "500px",
+     left:"50%",
+     width:"50%"
   },
   [theme.breakpoints.down("md")]: {
-    width: "430px",
-    minheight: "67%",
+    left:"50%",
   },
   [theme.breakpoints.down("sm")]: {
-     width: "430px",
+    left: "50%",
+    width:"75%"
   },
 }));
+
 export const LoginPageWrapper = styled(Box)(({ theme }) => ({
   height:"100%",
   display: "flex",
@@ -31,6 +33,7 @@ export const LoginPageWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
   },
 }));
+
 export const CustomSignInButton = styled(Button)(({ theme }) => ({
   position: "relative",
   margin: "1rem auto 0",

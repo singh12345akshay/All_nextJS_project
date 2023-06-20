@@ -166,7 +166,7 @@
       {
         "id": "60a8e5416ecda7cb05c05d00",
         "type": "facebookBot",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "",
         "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
       },
       {
@@ -466,7 +466,7 @@
       {
         "id": "63d7a636171d1aaaf42cc3c3",
         "type": "facebookBot",
-        "imagesrc": "/images/morganrandall.png",
+        "imagesrc": "",
         "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/estate-bot/main.js"
       },
       {
@@ -491,7 +491,15 @@
         "id": "647de1d039a1d532e87fc02c",
         "type": "webBot",
         "imagesrc": "/images/watermouthBot.png",
-        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/water-mouth-castle/main.js"
+        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/watermouth-prod/main.js"
+      },
+      {
+        "id": "648168c4402cf1ceb6da0ace",
+        "type": "webBot",
+        "imagesrc": "/images/apk-hospital.png",
+        "botscript": "https://mindpathtech-cdn.azureedge.net/chatbot/apk-hospital/main.js"
       }
     ]
 }
+
+

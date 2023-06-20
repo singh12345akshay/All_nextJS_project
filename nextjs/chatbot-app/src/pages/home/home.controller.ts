@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 export interface Idata {
   _id: string;
@@ -11,20 +10,18 @@ export interface Idata {
 export type apiResponse = Idata[];
 
 export default function HomeController() {
-
   const [bot, setBot] = useState<apiResponse>([]);
   const router = useRouter();
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
-
 
   const fetchData = async () => {
     const storedData = localStorage.getItem("authToken");
 
     if (storedData) {
       const authToken = JSON.parse(storedData);
-      
+
       try {
         // Make a GET request to the API endpoint
         const response = await axios.get(
@@ -37,10 +34,10 @@ export default function HomeController() {
         );
 
         const data = response.data.body;
-       
+
         setBot(data);
         setLoading(false);
-         localStorage.setItem("botList", JSON.stringify(data));
+        localStorage.setItem("botList", JSON.stringify(data));
       } catch (error) {
         console.error(error);
       }
@@ -50,12 +47,12 @@ export default function HomeController() {
     // function to fetch the data from the API
     fetchData();
   }, []);
-  const handleSearch = (event: { target: { value: any; }; }) => {
+  const handleSearch = (event: { target: { value: any } }) => {
     const { value } = event.target;
     setSearchText(value);
 
-    if (value.trim() === '') {
-      setSearchResults(bot);// Reset search results to original data
+    if (value.trim() === "") {
+      setSearchResults(bot); // Reset search results to original data
     } else {
       const filteredResults = bot.filter((item) =>
         item.name.toLowerCase().includes(value.toLowerCase())
@@ -64,13 +61,12 @@ export default function HomeController() {
       setSearchResults(filteredResults);
     }
   };
-  
-    return ({
-       getters:{bot,loading, searchText, searchResults},
-    handlers:{
-        fetchData,
-        handleSearch
-    }
-  })
-}
 
+  return {
+    getters: { bot, loading, searchText, searchResults },
+    handlers: {
+      fetchData,
+      handleSearch,
+    },
+  };
+}

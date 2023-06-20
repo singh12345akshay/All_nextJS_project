@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import React, { ReactComponentElement, useEffect, useState } from "react";
 
 interface AuthproviderProps {
   children: React.ReactNode;
@@ -39,9 +39,18 @@ export default function AuthProvider({ children }: AuthproviderProps) {
   }, [router]);
   if (isLoading) {
     return (
-      <div>
-        
-      </div>
+      <Box
+        sx={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}>
+        <CircularProgress />
+        <Typography variant="h5"> Loading...</Typography>
+      </Box>
     );
   }
 

@@ -17,5 +17,7 @@ export { default as login } from "./login.png";
 export { default as searchresult } from "./searcresult.jpg";
 export { default as searchResult } from "./searchresult.png";
 export { default as searchgif} from "./SEO.gif";
-export { default as search} from "./SEO-pana.png";
+export { default as search } from "./SEO-pana.png";
+export { default as ebotifyMiniIcon} from "./ebotify-miniIcon.png";
+export { default as botMiniIcon} from "./botminiIcon.png";
 
