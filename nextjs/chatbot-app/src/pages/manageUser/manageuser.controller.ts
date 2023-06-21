@@ -61,15 +61,15 @@ export default function ManageuserController() {
           vertical: "top",
           horizontal: "center",
         },
-      })
-        setEmail({
-          value: "",
-          isValid: true,
-        });
+      });
+      setEmail({
+        value: "",
+        isValid: true,
+      });
       setPassword({
-          value: "",
-          isValid: true,
-        });;
+        value: "",
+        isValid: true,
+      });
     } catch (response) {
       console.log("response:", response.response.data.message);
       // console.error("Error logging in", error);
